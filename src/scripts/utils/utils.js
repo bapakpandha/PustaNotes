@@ -36,8 +36,30 @@ function AddGlobalStyle(parentElement) {
             padding: 0.75rem 2rem;
             border-radius: 2rem;
             display: flex;
-}       
+        }
+            
+        section {
+            margin: 3rem auto;
+        }
 
+        main .container-section {
+            background-color: var(--main-color);
+            padding: 1rem;
+            border-radius: 1rem;
+            box-shadow: 0 0px 8px rgba(85, 97, 110, 0.9);
+            position: relative;
+        }
+
+        main .container-section {
+            background-size: 600% 600%;
+            -webkit-animation: gradien_background 9s ease infinite;
+            -moz-animation: gradien_background 9s ease infinite;
+            animation: gradien_background 9s ease infinite;
+        }
+        .button:hover {
+            color: var(--main-color) !important;
+            background-color: #1b2d4c;
+        }
 
     `;
 

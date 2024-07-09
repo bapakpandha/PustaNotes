@@ -75,6 +75,10 @@ body>.container {
     padding: 1rem 5%;
 }
 
+body>* {
+    display: block;
+}
+
 main {
     margin-top: 5rem;
 }
@@ -197,7 +201,6 @@ main .container-section {
 }
 
 main .container-section {
-    /* background: linear-gradient(270deg, #e6eceb, #dcf2f1, #aecdc5); */
     background-size: 600% 600%;
     -webkit-animation: gradien_background 9s ease infinite;
     -moz-animation: gradien_background 9s ease infinite;
