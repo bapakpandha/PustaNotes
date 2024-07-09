@@ -1,0 +1,114 @@
+{
+    "main": [
+        {
+            "id": 1,
+            "title": "Gadai Syariah",
+            "author": "Yusnedi Achmad",
+            "year": 2014,
+            "isComplete": false,
+            "link_cover": "https://portal-storage.moco.co.id/mccp-public-images/static/cover/c6b05a7a45fb93a3b9535a11250874ed.png",
+            "isInBookshelf": false,
+            "summary": "Buku ini membahas mengenai Gadai syariah, yang merupakan solusi terhadap kebutuhan masyarakat muslim tentang masalah finansial, disamping itu juga terhindar dari unsur riba. Dalam buku ini juga dibahas mengenai teori tentang bunga, pengembangan sistem operasional pegadaian syari’ah dan pengembangan layanan pegadaian."
+        },
+        {
+            "id": 2,
+            "title": "Bola Voli",
+            "author": "Anung Hendar Isnanto",
+            "year": 2010,
+            "isComplete": false,
+            "link_cover": "https://portal-storage.moco.co.id/mccp-public-images/static/cover/c1f76cab76fa9d060d8575eb9f672cba.png",
+            "isInBookshelf": false,
+            "summary": "Bola voli adalah salah satu cabang olahraga yang dimainkan oleh dua tim yang saling berlawanan. Masing-masing tim terdiri dari 6 orang anggota inti dan beberapa pemain cadangan. Ini untuk jenis permainan bola voli lapangan. Untuk di Indonesia sendiri, yang menaungi cabang olahraga bola voli ini adalah PBVSI (Persatuan Bola Voli Seluruh Indonesia). Bola voli adalah salah satu cabang olahraga terfavorit di Indonesia. Berbagai penghargaan dan kemenangan pun sudah diraih para atlet Indonesia di berbagai kejuaraan dunia dalam permainan bola voli. Karenanya akan terasa tidak lengkap kalau kita tidak mempelajari sejarah permainan bola voli ini. Kalau tidak seluruhnya, paling tidak kita tahu sejarah permainan bola voli agar semakin menambah wawasan kita dalam dunia bola voli. Buku ini menyajikan dari sejarah, teknik dasar yang harus dikuasai dalam permainan bola voli dan juga teknik dan aturan dari bola voli yang disajikan secara praktis agar pembaca bisa mudah memahami tentang bola voli."
+        },
+        {
+            "id": 3,
+            "title": "Berhenti Sejenak",
+            "author": "Mohamad Nur Sodiq",
+            "year": 2018,
+            "isComplete": false,
+            "link_cover": "https://portal-storage.moco.co.id/mccp-public-images/static/cover/c20f2b3641cb0bedbbe3454e1ce826b6.jpg",
+            "isInBookshelf": false,
+            "summary": "Buku kumpulan cerita inspirasi Berhenti Sejenak ini merupakan wujud usaha mengumpulkan setitik demi setitik embun hikmah yang sungguh tak terbatas jumlahnya. Berhenti Sejenak, mengajak kita untuk “beristirahat sebentar” mengambil napas untuk melihat dan memaknai perjalanan kita. Menengok ke belakang, melihat apa yang telah dan sedang kita lakukan untuk kehidupan kita ini. Berhenti sejenak, juga untuk mengatur langkah kita ke depan tentunya untuk selalu melakukan hal yang baik dan membaikkan bagi semuanya."
+        },
+        {
+            "id": 4,
+            "title": "Seri Seminggu di Luar Negeri: Seminggu Penuh Kenangan di Tiongkok",
+            "author": "Inni Indarpuri",
+            "year": 2019,
+            "isComplete": false,
+            "link_cover": "https://portal-storage.moco.co.id/mccp-public-images/static/cover/1698b6f679d7187cb2da388ca9ba963c.png",
+            "isInBookshelf": false,
+            "summary": ""
+        },
+        {
+            "id": 5,
+            "title": "Novena Maria Bunda Selalu Menolong",
+            "author": "Publikasi Redemptoris Indonesia",
+            "year": 2018,
+            "isComplete": false,
+            "link_cover": "https://portal-storage.moco.co.id/mccp-public-images/static/cover/fdb11d1a6a1c7507c614476f29c05b61.png",
+            "isInBookshelf": false,
+            "summary": ""
+        },
+        {
+            "id": 6,
+            "title": "Bahasa Indonesia Keilmuan , Buku Ajar Bahasa Indonesia Akademik",
+            "author": "Zainal Aqib, Hendrix Irawan",
+            "year": 2021,
+            "isComplete": false,
+            "link_cover": "https://portal-storage.moco.co.id/mccp-public-images/static/cover/dec468b7f16ac9052ae70b5206297a62.jpg",
+            "isInBookshelf": false,
+            "summary": ""
+        },
+        {
+            "id": 7,
+            "title": "10 Hari Buka Bisnis",
+            "author": "Akhmad Adiasta R.",
+            "year": 2019,
+            "isComplete": false,
+            "link_cover": "https://portal-storage.moco.co.id/mccp-public-images/static/cover/f1a30e919ba9b09a32f8831946dde0c6.png",
+            "isInBookshelf": false,
+            "summary": ""
+        },
+        {
+            "id": 8,
+            "title": "Selayang Pandang Sulawesi Utara",
+            "author": "Ir. Nugroho Yuananto",
+            "year": 2019,
+            "isComplete": false,
+            "link_cover": "https://portal-storage.moco.co.id/mccp-public-images/static/cover/87edb30e104e69125a618a559b2b7d85.png",
+            "isInBookshelf": false,
+            "summary": ""
+        },
+        {
+            "id": 9,
+            "title": "Concept and Indicator Human Resources Management for Management Research",
+            "author": "Pandi Afandi",
+            "year": 2009,
+            "isComplete": false,
+            "link_cover": "https://portal-storage.moco.co.id/mccp-public-images/static/cover/0a66a2b2b03e0f97972ae1bb59a10c3f.png",
+            "isInBookshelf": false,
+            "summary": "Menciptakan lingkungan kerja yang nyaman, produktif, efektif, dan efisien diperlukan pengamatan dan evaluasi secara berkelanjutan terhadap aspek-aspek dalam perusahaan. Hal ini menjadi tugas yang tidak mudah bagi HRD perusahaan.<br>Buku Concept & Indicator Human Resources sangat cocok bagi HRD atau anda yang ingin belajar mengelola usaha. Melalui berbagai pendekatan yang disampaikan dalam buku ini, anda dapat mengelaborasikan pengalaman anda dan isi buku ini untuk menciptakan hasil yang optimal. Dengan demikian, produktivitas dalam perusahaan dapat dioptimalkan melalui evaluasi berkelanjutan terhadap segala aspek yang ada di dalam perusahaan."
+        },
+        {
+            "id": 10,
+            "title": "Karakteristik Pancasila sebagai Ideologi Terbuka",
+            "author": "Eko Julianto",
+            "year": 2020,
+            "isComplete": false,
+            "link_cover": "https://portal-storage.moco.co.id/mccp-public-images/static/cover/e3944a64ac304608a0af1e848ea8eb18.jpg",
+            "isInBookshelf": false,
+            "summary": ""
+        },
+        {
+            "id": 11,
+            "title": "Setangkai Edelweiss",
+            "author": "Marga T",
+            "year": 2020,
+            "isComplete": false,
+            "link_cover": "https://portal-storage.moco.co.id/mccp-public-images/static/cover/917bb3b037f6d3e9faeaa36b43f37bb1.png",
+            "isInBookshelf": false,
+            "summary": "Tujuh tahun setelah perpisahannya dengan Martin, Monik terdampar di Eropa ke dalam jaring cinta Pierre Jouvray. Sesaat dia terlena, ingin melupakan dan menerima. Namun selalu dan selalu dalam hati namanya masih bergema. Martin! %%% Seperti karya-karya lainnya, Setangkai Edelweiss membuktikan kepiawaian Marga T dalam merangkai kata menjadi sebuah cerita yang indah dan menarik. Tiap kisah dan peristiwa dalam buku ini terjalin erat dan saling menyatu, menggambarkan perjuangan Monik mencari cinta abadinya pada Martin yang tak pernah lekang oleh waktu maupun jarak. Ber-setting di era tahun 70-an, kisah cinta dramatis ini adalah mahakarya Marga T yang tidak boleh dilewatkan. Kekayaan cerita mengenai cinta abadi adalah sesuatu yang selalu bisa dinikmati, tanpa mengenal waktu. —Yanti Rahardjo, pengarang novel remaja Martin adalah sepotong bara yang tak mau padam, sebatang lilin yang terus bernyala di hati Monik. Martin yang tenang dengan cintanya yang lebih dalam dari laut, lebih tinggi dari gunung... Sebentuk bacaan yang lengkap: alur cerita yang bagus, gaya bertutur yang memikat, dengan tambahan pengetahuan kedokteran dan kebudayaan yang dapat memperkaya jiwa. Bacaan yang tetap mengasyikkan walau waktu novel dengan waktu kini, terbentang jauh. —Ai, penggemar dan pengagum Marga T"
+        }
+    ]
+}
