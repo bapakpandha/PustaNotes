@@ -18,7 +18,7 @@ class pn_header extends HTMLElement {
         this.adtFunc().updateStyle()
         this.adtFunc().addClassList()
         this._headerElement.innerHTML = `
-        <div class="container-logo-header tautan" data-tautan="index.html"><img class="logo" src="assets/img/icon.png"
+        <div class="container-logo-header tautan" data-tautan="index.html"><img class="logo" src="src/img/icon.png"
                 alt="">
             <div class="logo_title">Pusta<span>Notes</span></div>
         </div>
@@ -26,7 +26,7 @@ class pn_header extends HTMLElement {
             <nav class="navbar scale_font scale_width">
                 <ul><a href="index.html">
                         <li>Beranda</li>
-                    </a><a href="assets/pages/app.html">
+                    </a><a href="" disabled>
                         <li>Daftar Catatan</li>
                     </a><a href="index.html" disabled="disabled">
                         <li>Kontak</li>
@@ -260,7 +260,7 @@ class pn_header extends HTMLElement {
         function verifySignIn() {
             // TODO #254
             // IF ELSE SIGNED IN USING PROPERTY
-            var signInButton = `<a class="button" href="assets/pages/login.html"><li>Sign In</li></a>`
+            var signInButton = `<a class="button" href="#" disabled><li>Sign In</li></a>`
             return signInButton
         }
 
@@ -313,7 +313,6 @@ class pn_header extends HTMLElement {
         }
 
         function handleResize() {
-            console.log('Window resized!');
             Utils.checkWindowWidth(self._shadowRoot);
         }
 

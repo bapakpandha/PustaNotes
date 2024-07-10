@@ -256,6 +256,8 @@ class pn_notes_wrapper extends HTMLElement {
                 border-radius: 6px;
                 font-size: 1.2rem;
                 cursor: pointer;
+                border: solid 3px black;
+
             }
             .addNewNote:hover {
                 background: #037962;

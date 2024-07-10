@@ -15,7 +15,7 @@ class pn_noteitems extends HTMLElement {
 
     render() {
         this._ContainerElement.innerHTML = 
-        `<div class=container><div class=title><h2>Cari Catatan</h2></div><div id=search><form action=javascript:void(0);><fieldset class=clearfix style=display:flex;flex-direction:row><input type=search value="Cari Catatan disini"name=search onblur='""==this.value&&(this.value="Cari Catatan disini")'onfocus='"Cari Catatan disini"==this.value&&(this.value="")'> <input type=submit value=Search class=button name=search_submit> <input type=submit value=Reset class=button onclick=writeBookDataExec()></fieldset></form></div><div class="title" style="margin:1.8rem auto;"><button id="addNewNote" class="addNewNote">Tambah Catatan Baru</button></div><div class=content></div></div>
+        `<div class=container><div class=title><h2>Cari Catatan</h2></div><div id=search><form action=javascript:void(0);><fieldset class=clearfix style=display:flex;flex-direction:row><input type=search value="Cari Catatan disini"name=search onblur='""==this.value&&(this.value="Cari Catatan disini")'onfocus='"Cari Catatan disini"==this.value&&(this.value="")'> <input type=submit value=Search class=button name=search_submit> <input type=submit value=Reset class=button></fieldset></form></div><div class="title" style="margin:1.8rem auto;"><button id="addNewNote" class="addNewNote">Tambah Catatan Baru</button></div><div class=content></div></div>
            `
         this.execAdtFunct();
     }   
@@ -37,8 +37,9 @@ class pn_noteitems extends HTMLElement {
             return result
         }
         
-        function displayNotes() {
-            getNotesData().forEach(note => {
+        function displayNotes(data) {
+            clearContentNotes();
+            data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).forEach(note => {
                 const noteElement = document.createElement('pn-noteitem');
                 noteElement.innerHTML = `
                     <span slot="notes_id">${note.id}</span>
@@ -48,7 +49,9 @@ class pn_noteitems extends HTMLElement {
                     <span slot="archived">${note.archived}</span>
                 `;
                 const content_element = self._ContainerElement.querySelector('div.content');
+                
                 content_element.appendChild(noteElement);
+                
             });
         }
 
@@ -62,6 +65,7 @@ class pn_noteitems extends HTMLElement {
         }
 
         function addNewNoteHandlerExec() {
+            self = self
             function showModal() {
                 if (document.querySelector(".addNewNote") === null) {
                     var doc = document.createElement('div');
@@ -70,20 +74,7 @@ class pn_noteitems extends HTMLElement {
                         <div class=demo-page>
                             <main class=demo-page-content>
                                 <section>
-                                    <h1><svg class="feather feather-align-justify" fill=none height=24 style=display:block;margin:auto
-                                            viewBox="0 0 24 24" width=24 xmlns=http://www.w3.org/2000/svg>
-                                            <g id=SVGRepo_bgCarrier stroke-width=0></g>
-                                            <g id=SVGRepo_tracerCarrier stroke-linecap=round stroke-linejoin=round></g>
-                                            <g id=SVGRepo_iconCarrier>
-                                                <rect fill=white height=24 width=24></rect>
-                                                <path
-                                                    d="M12 6.90909C10.8999 5.50893 9.20406 4.10877 5.00119 4.00602C4.72513 3.99928 4.5 4.22351 4.5 4.49965C4.5 6.54813 4.5 14.3034 4.5 16.597C4.5 16.8731 4.72515 17.09 5.00114 17.099C9.20405 17.2364 10.8999 19.0998 12 20.5M12 6.90909C13.1001 5.50893 14.7959 4.10877 18.9988 4.00602C19.2749 3.99928 19.5 4.21847 19.5 4.49461C19.5 6.78447 19.5 14.3064 19.5 16.5963C19.5 16.8724 19.2749 17.09 18.9989 17.099C14.796 17.2364 13.1001 19.0998 12 20.5M12 6.90909L12 20.5"
-                                                    stroke=#000000 stroke-linejoin=round></path>
-                                                <path
-                                                    d="M19.2353 6H21.5C21.7761 6 22 6.22386 22 6.5V19.539C22 19.9436 21.5233 20.2124 21.1535 20.0481C20.3584 19.6948 19.0315 19.2632 17.2941 19.2632C14.3529 19.2632 12 21 12 21C12 21 9.64706 19.2632 6.70588 19.2632C4.96845 19.2632 3.64156 19.6948 2.84647 20.0481C2.47668 20.2124 2 19.9436 2 19.539V6.5C2 6.22386 2.22386 6 2.5 6H4.76471"
-                                                    stroke=#000000 stroke-linejoin=round></path>
-                                            </g>
-                                        </svg> Tambahkan Catatan Baru</h1>
+                                    <h1><svg style="display:block;margin:auto;" fill="#000000" height="24px" width="24px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 345.369 345.369" xml:space="preserve"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <g> <g> <g> <path d="M199.654,105.629H49.965c-4.143,0-7.5-3.357-7.5-7.5s3.357-7.5,7.5-7.5h149.689c4.142,0,7.5,3.357,7.5,7.5 S203.796,105.629,199.654,105.629z"></path> </g> <g> <path d="M163.922,139.246H49.965c-4.143,0-7.5-3.357-7.5-7.5c0-4.143,3.357-7.5,7.5-7.5h113.957c4.142,0,7.5,3.357,7.5,7.5 C171.422,135.889,168.063,139.246,163.922,139.246z"></path> </g> <g> <path d="M87.682,240.096H49.965c-4.143,0-7.5-3.357-7.5-7.5c0-4.143,3.357-7.5,7.5-7.5h37.717c4.142,0,7.5,3.357,7.5,7.5 C95.182,236.738,91.823,240.096,87.682,240.096z"></path> </g> <g> <path d="M71.332,273.713H49.965c-4.143,0-7.5-3.357-7.5-7.5c0-4.143,3.357-7.5,7.5-7.5h21.367c4.142,0,7.5,3.357,7.5,7.5 C78.832,270.355,75.474,273.713,71.332,273.713z"></path> </g> <path d="M333.404,34.782l-17.108-12.757c-4.308-3.212-9.605-4.558-14.923-3.779c-5.316,0.775-10.012,3.573-13.223,7.88 c-0.002,0.002-0.004,0.005-0.005,0.007l-42.411,57.48V26.529c0-4.143-3.357-7.5-7.5-7.5h-31.08V7.5c0-4.143-3.358-7.5-7.5-7.5 c-4.143,0-7.5,3.357-7.5,7.5v11.529H169.73V7.5c0-4.143-3.357-7.5-7.5-7.5c-4.142,0-7.5,3.357-7.5,7.5v11.529h-22.422V7.5 c0-4.143-3.357-7.5-7.5-7.5c-4.143,0-7.5,3.357-7.5,7.5v11.529H94.887V7.5c0-4.143-3.358-7.5-7.5-7.5c-4.143,0-7.5,3.357-7.5,7.5 v11.529H57.465V7.5c0-4.143-3.358-7.5-7.5-7.5c-4.143,0-7.5,3.357-7.5,7.5v11.529H11.383c-4.142,0-7.5,3.357-7.5,7.5v311.34 c0,4.143,3.358,7.5,7.5,7.5h226.852c4.143,0,7.5-3.357,7.5-7.5V188.138l91.767-125.204c0.001-0.002,0.003-0.003,0.005-0.005 C344.134,54.038,342.295,41.412,333.404,34.782z M230.734,330.369H18.883V34.029h23.582v11.527c0,4.143,3.357,7.5,7.5,7.5 c4.142,0,7.5-3.357,7.5-7.5V34.029h22.422v11.527c0,4.143,3.357,7.5,7.5,7.5c4.142,0,7.5-3.357,7.5-7.5V34.029h22.422v11.527 c0,4.143,3.357,7.5,7.5,7.5c4.143,0,7.5-3.357,7.5-7.5V34.029h22.422v11.527c0,4.143,3.358,7.5,7.5,7.5 c4.143,0,7.5-3.357,7.5-7.5V34.029h22.424v11.527c0,4.143,3.357,7.5,7.5,7.5c4.142,0,7.5-3.357,7.5-7.5V34.029h23.58v70.166 l-39.113,53.668H49.965c-4.143,0-7.5,3.357-7.5,7.5c0,4.143,3.357,7.5,7.5,7.5h130.725c0,0-42.642,58.513-42.65,58.525 c0,0,0.002,0,0.004,0c-0.484,0.673-0.87,1.432-1.115,2.272l-17.15,58.669H49.965c-4.143,0-7.5,3.357-7.5,7.5 c0,4.143,3.357,7.5,7.5,7.5c0,0,75.515-0.006,75.555-0.006c0-0.001-0.001-0.002-0.002-0.002c1.373-0.022,2.744-0.413,3.951-1.193 l56.059-36.229c0.771-0.498,1.412-1.119,1.932-1.813c0.018-0.024,43.275-59.367,43.275-59.367V330.369z M148.296,248.23 l20.024,14.932l-30.069,19.432L148.296,248.23z M179.861,253.057l-25.305-18.869L272.844,71.883l25.305,18.869L179.861,253.057z M307.05,78.678l-25.306-18.869l8.076-10.83l25.305,18.871L307.05,78.678z M325.48,53.962c-0.002,0.002-0.004,0.005-0.005,0.007 l-1.384,1.855l-25.305-18.871l1.383-1.854c0.002-0.002,0.004-0.004,0.006-0.006c0.816-1.095,2.01-1.807,3.361-2.004 c1.353-0.196,2.697,0.146,3.791,0.961l17.109,12.757C326.697,48.492,327.165,51.702,325.48,53.962z"></path> </g> </g> </g> </g></svg> Tambahkan Catatan Baru</h1>
                                     <div class=nice-form-group><label>Judul Catatan</label> <input type="text" id=title
                                             placeholder="Contoh: Deadline Coding Front End" required><span id="warning_title" style="padding: 0.5rem 0.2rem;display: none;color: red;">Judul Tidak Boleh Kosong!</span></div>
                                     <div class=nice-form-group><label>Isi Catatan</label> <textarea cols=10 id=note_body
@@ -292,8 +283,8 @@ class pn_noteitems extends HTMLElement {
                 submit.addEventListener('click', submitNote);
                 
                 title_field.addEventListener('input', () => {
-                    if (title_field.value.length < 3) {
-                        title_warning.textContent = 'Judul Harus Lebih Dari 3 Karakter!';
+                    if (title_field.value.length < 5) {
+                        title_warning.textContent = 'Judul Harus Lebih Dari 5 Karakter!';
                         title_warning.style.display = "block"
                     } else {
                         title_warning.textContent = ""
@@ -302,8 +293,8 @@ class pn_noteitems extends HTMLElement {
                 });
 
                 body_field.addEventListener('input', () => {
-                    if (body_field.value.length < 3) {
-                        body_warning.textContent = 'Isi Catatan Harus Lebih Dari 3 Karakter!';
+                    if (body_field.value.length < 5) {
+                        body_warning.textContent = 'Isi Catatan Harus Lebih Dari 5 Karakter!';
                         body_warning.style.display = "block"
                     } else {
                         body_warning.textContent = ""
@@ -324,7 +315,11 @@ class pn_noteitems extends HTMLElement {
                 const note_id = `Notes-${dateNow}`
                 const title = modal.querySelector('#title').value;
                 const noteBody = modal.querySelector('#note_body').value;
+                var title_warning = document.body.querySelector('#warning_title');
+                var body_warning = document.body.querySelector('#warning_body')
                 if (!title) {
+                    title_warning.textContent = 'Judul Tidak Boleh Kosong!';
+                    title_warning.style.display = "block"
                     var ConfirmBox = Utils.generalConfirmDialogBuilder();
                     var confBox = new ConfirmBox(document.body, {
                         ok: function () {
@@ -332,19 +327,28 @@ class pn_noteitems extends HTMLElement {
                         }
                     }, [`Judul Catatan Tidak Lengkap!`], [`Mohon Tambahkan Judul, Karena Tidak Boleh Kosong`], false, "Ok");
                 } else if (!noteBody) {
+                    body_warning.textContent = 'Isi Catatan Tidak Boleh Kosong!';
+                    body_warning.style.display = "block"
                     var ConfirmBox = Utils.generalConfirmDialogBuilder();
                     var confBox = new ConfirmBox(document.body, {
                         ok: function () {
                             return
                         }
-                    }, [`Isi Catatan Kosong!`], [`Mohon tambahkan Isi catatan setidaknya 3 karakter`], false, "Ok");
-                } else if (title.length<3) {
+                    }, [`Isi Catatan Kosong!`], [`Mohon tambahkan Isi catatan setidaknya 5 karakter`], false, "Ok");
+                } else if (title.length<5) {
                     var ConfirmBox = Utils.generalConfirmDialogBuilder();
                     var confBox = new ConfirmBox(document.body, {
                         ok: function () {
                             return
                         }
-                    }, [`Judul Catatan Minimal 3 Karakter!`], [`Mohon tambahkan Judul catatan setidaknya 3 karakter`], false, "Ok");
+                    }, [`Judul Catatan Minimal 5 Karakter!`], [`Mohon tambahkan Judul catatan setidaknya 5 karakter`], false, "Ok");
+                } else if (noteBody.length<5) {
+                    var ConfirmBox = Utils.generalConfirmDialogBuilder();
+                    var confBox = new ConfirmBox(document.body, {
+                        ok: function () {
+                            return
+                        }
+                    }, [`Judul Catatan Minimal 5 Karakter!`], [`Mohon tambahkan Judul catatan setidaknya 5 karakter`], false, "Ok");
                 } else {
                     let NoteData = Notes.getAll();
                     if (!NoteData) {
@@ -363,7 +367,7 @@ class pn_noteitems extends HTMLElement {
                             Notes.addNote(note_data);
                             hideModal();
                             self.adtFunct().clearContentNotes();
-                            self.adtFunct().displayNotes();
+                            self.adtFunct().displayNotes(self.adtFunct().getNotesData());
                             console.log(Notes.getAll());
                         },
                         cancel: function () {
@@ -374,13 +378,43 @@ class pn_noteitems extends HTMLElement {
             return { showModal: showModal, hideModal: hideModal, submitNote: submitNote }
         }
 
-        return {addClassList:addClassList, getNotesData:getNotesData, displayNotes:displayNotes, listenAddNoteButton:listenAddNoteButton,addNewNoteHandlerExec:addNewNoteHandlerExec,clearContentNotes:clearContentNotes}
+        function generalSearchHandler() {
+            self = self;
+            function handleSearch(searchString) {
+                var jsonDataString = self.adtFunct().getNotesData();
+                let filteredNotesName = jsonDataString.filter(note => note.title.toLowerCase().includes(searchString.toLowerCase()));
+                self.adtFunct().displayNotes(filteredNotesName);
+            }
+            function searchHandler() {
+                const searchBar = self._ContainerElement.querySelector('input[type="search"][name="search"]');
+                let timeoutId;
+                searchBar.addEventListener("keyup", e => {
+                    console.log(searchBar.value);
+                    clearTimeout(timeoutId);
+                    var searchString = e.target.value;
+                    timeoutId = setTimeout(() => {
+                        handleSearch(searchString);
+                    }, 100);
+                });
+            }
+            function searchButtonClickHandler() {
+                const searchBar = self._ContainerElement.querySelector('input[type="search"][name="search"]');
+                const searchString = searchBar.value;
+                handleSearch(searchString);
+            }
+            const searchButton = self._ContainerElement.querySelector('input[name="search_submit"]');
+            searchButton.addEventListener("click", searchButtonClickHandler);
+            searchHandler();
+        }
+
+        return {addClassList:addClassList, getNotesData:getNotesData, displayNotes:displayNotes, listenAddNoteButton:listenAddNoteButton,addNewNoteHandlerExec:addNewNoteHandlerExec,clearContentNotes:clearContentNotes,generalSearchHandler:generalSearchHandler}
     }
     execAdtFunct() {
         this.adtFunct().addClassList();
         this.adtFunct().getNotesData();
-        this.adtFunct().displayNotes();
+        this.adtFunct().displayNotes(self.adtFunct().getNotesData());
         this.adtFunct().listenAddNoteButton();
+        this.adtFunct().generalSearchHandler();
     }
 }
 
