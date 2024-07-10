@@ -7,9 +7,7 @@ class pn_notes_wrapper extends HTMLElement {
         this._mainElement = document.createElement('main');
         this._sectionElement = document.createElement('section');
         this._wrapperElement = document.createElement('div');
-        this._noteList = document.createElement('p-notelist');
         this._style = document.createElement('style');
-        this._wrapperElement.appendChild(this._noteList);
         this._sectionElement.appendChild(this._wrapperElement);
         this._mainElement.appendChild(this._sectionElement);
         this._shadowRoot.appendChild(this._mainElement);
@@ -31,22 +29,9 @@ class pn_notes_wrapper extends HTMLElement {
                         <p>Catatan Anda akan tersimpan di halaman ini</p>
                     </div>
                 </div>
-                <div>
-                    <div class="notes_info tabs" onclick="appHtmlTabsHandler(event)">
-                        <div class="active">
-                            Catatan Utama
-                        </div>
-                        <div class="">
-                            Catatan Diarsipkan
-                        </div>
-                    </div>
-                    <div class="isi_buku">
-
-                    </div>
-                </div>
+                <pn-notelist></pn-notelist>
         `
         ;
-        this._wrapperElement.appendChild(this._noteList);
         this._shadowRoot.appendChild(this._style);
         this.execAdditionalFunction();
     }
@@ -101,7 +86,7 @@ class pn_notes_wrapper extends HTMLElement {
                 border-start-start-radius: 1rem;
             }
 
-            .isi_buku .container {
+            .list_notes .container {
                 display: flex;
                 flex-direction: column;
                 align-content: center;
@@ -110,7 +95,7 @@ class pn_notes_wrapper extends HTMLElement {
                 flex-wrap: nowrap;
             }
 
-            .isi_buku .item {
+            .list_notes .item {
                 display: flex;
                 width: 12.5rem;
                 height: 21rem;
@@ -123,7 +108,7 @@ class pn_notes_wrapper extends HTMLElement {
                 justify-content: space-around;
             }
 
-            .isi_buku .item img {
+            .list_notes .item img {
                 width: 135px;
                 height: 185px;
                 object-fit: cover;
@@ -133,11 +118,11 @@ class pn_notes_wrapper extends HTMLElement {
             }
 
 
-            .isi_buku .title {
+            .list_notes .title {
                 margin: 1.5rem auto;
             }
 
-            .isi_buku .item h3 {
+            .list_notes .item h3 {
                 text-overflow: ellipsis;
                 width: 100%;
                 -webkit-line-clamp: 2;
@@ -149,7 +134,7 @@ class pn_notes_wrapper extends HTMLElement {
                 margin: 0.5rem 0;
             }
 
-            .isi_buku .item h5 {
+            .list_notes .item h5 {
                 font-size: 0.8rem;
                 color: rgba(0, 0, 0, 0.5);
                 text-overflow: ellipsis;
@@ -161,7 +146,7 @@ class pn_notes_wrapper extends HTMLElement {
                 max-height: 1.5rem;
             }
 
-            .isi_buku .content {
+            .list_notes .content {
                 display: flex;
                 flex-direction: row;
                 flex-wrap: wrap;
@@ -172,7 +157,7 @@ class pn_notes_wrapper extends HTMLElement {
                 padding: 0 2rem;
             }
 
-            .isi_buku .item div ul {
+            .list_notes .item div ul {
                 display: flex;
                 align-items: center;
                 justify-content: center;
@@ -182,20 +167,20 @@ class pn_notes_wrapper extends HTMLElement {
                 margin-top: 0.5rem;
             }
 
-            .isi_buku .item div {
+            .list_notes .item div {
                 width: 100%;
                 justify-items: center;
                 display: flex;
             }
 
-            .isi_buku .item .tooltip,
-            .isi_buku .item .tooltip svg {
+            .list_notes .item .tooltip,
+            .list_notes .item .tooltip svg {
                 transition: color .2s linear;
 
             }
 
-            .isi_buku .item .tooltip:hover,
-            .isi_buku .item .tooltip:hover svg {
+            .list_notes .item .tooltip:hover,
+            .list_notes .item .tooltip:hover svg {
                 transform: scale(1.1);
                 color: var(--third-color);
                 cursor: pointer;
