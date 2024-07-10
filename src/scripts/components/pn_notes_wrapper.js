@@ -1,4 +1,4 @@
-import {AddGlobalStyle, AddContainerStyle, AddFontStyle, AddAnimationStyle} from "../utils/utils.js";
+import Utils from "../utils/utils.js";
 
 class pn_notes_wrapper extends HTMLElement {
     constructor() {
@@ -30,6 +30,7 @@ class pn_notes_wrapper extends HTMLElement {
                     </div>
                 </div>
                 <pn-notelist></pn-notelist>
+                <pn-noteitems class="list_notes"></pn-noteitems>
         `
         ;
         this._shadowRoot.appendChild(this._style);
@@ -146,17 +147,31 @@ class pn_notes_wrapper extends HTMLElement {
                 max-height: 1.5rem;
             }
 
-            .list_notes .content {
-                display: flex;
-                flex-direction: row;
-                flex-wrap: wrap;
-                align-content: center;
-                justify-content: center;
-                align-items: flex-start;
-                width: 100%;
-                padding: 0 2rem;
+            .list_notes .content{
+                display: grid;
+                gap: 2rem;
             }
 
+            @media (min-width: 992px) {
+                .list_notes .content {
+                    grid-template-columns: repeat(2, 1fr);
+                }
+            }
+
+            @media (max-width: 991px) {
+                .list_notes .content {
+                    grid-template-columns: 1fr;
+                }
+            }
+
+
+            .list_notes .content {
+                width: 100%;
+                padding: 0 2rem;
+                margin-bottom:2rem;
+            }
+
+            
             .list_notes .item div ul {
                 display: flex;
                 align-items: center;
@@ -187,6 +202,66 @@ class pn_notes_wrapper extends HTMLElement {
                 transition: color .2s linear;
             }
 
+            #search {
+                background: var(--third-color);
+                border-radius: 0.4rem;
+                padding: 4.5px;
+                margin: 0 auto 2rem auto;
+            }
+
+            #search {
+                background: var(--third-color);
+                border-radius: 0.4rem;
+                padding: 4.5px;
+                margin: 0 auto 0 auto;
+            }
+
+            #search input[type="search"],
+            #search input[type="submit"] {
+                border-radius: 3px;
+                font-size: 1.2rem;
+            }
+
+            #search input[type="search"] {
+                background: #fff;
+                color: #42454e;
+                min-width: 18rem;
+                padding: 6px 8px;
+                height: 2.7rem;
+            }
+
+            #search input[type="submit"] {
+                background: #1bba9a;
+                color: #fff;
+                font-weight: bold;
+                margin-left: 7px;
+                padding: 6px 10px;
+            }
+
+            #search input[type="submit"]:hover {
+                background: #189e83;
+            }
+
+            #search input[type="search"]::-webkit-input-placeholder { color: #42454e; }
+            #search input[type="search"]:-moz-placeholder { color: #42454e; }
+            #search input[type="search"]:-ms-input-placeholder { color: #42454e; }
+
+            .addNewNote {
+                min-width: 18rem;
+                height: 2.7rem;
+                background: #1bba9a;
+                color: #fff;
+                font-weight: bold;
+                padding: 6px 10px;
+                border-radius: 6px;
+                font-size: 1.2rem;
+                cursor: pointer;
+            }
+            .addNewNote:hover {
+                background: #037962;
+                color: #fff;
+            }
+
             `
         }
         return {addClassList:addClassList, updateStyle:updateStyle}
@@ -195,10 +270,10 @@ class pn_notes_wrapper extends HTMLElement {
     execAdditionalFunction() {
         this.adtFunc().addClassList();
         this.adtFunc().updateStyle();
-        AddContainerStyle(this._shadowRoot);
-        AddFontStyle(this._shadowRoot);
-        AddAnimationStyle(this._shadowRoot);
-        AddGlobalStyle(this._shadowRoot);
+        Utils.AddContainerStyle(this._shadowRoot);
+        Utils.AddFontStyle(this._shadowRoot);
+        Utils.AddAnimationStyle(this._shadowRoot);
+        Utils.AddGlobalStyle(this._shadowRoot);
     }
 
 }

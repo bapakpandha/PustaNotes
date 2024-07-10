@@ -1,4 +1,4 @@
-import {AddGlobalStyle, AddContainerStyle, AddFontStyle, AddAnimationStyle, checkWindowWidth } from "../utils/utils.js";
+import Utils from "../utils/utils.js";
 
 class pn_header extends HTMLElement {
     constructor() {
@@ -20,14 +20,14 @@ class pn_header extends HTMLElement {
         this._headerElement.innerHTML = `
         <div class="container-logo-header tautan" data-tautan="index.html"><img class="logo" src="assets/img/icon.png"
                 alt="">
-            <div class="logo_title">Pusta<span>books</span></div>
+            <div class="logo_title">Pusta<span>Notes</span></div>
         </div>
         <div class="container-navbar">
             <nav class="navbar scale_font scale_width">
                 <ul><a href="index.html">
                         <li>Beranda</li>
                     </a><a href="assets/pages/app.html">
-                        <li>Daftar Buku</li>
+                        <li>Daftar Catatan</li>
                     </a><a href="index.html" disabled="disabled">
                         <li>Kontak</li>
                     </a><a href="index.html" disabled="disabled">
@@ -46,13 +46,13 @@ class pn_header extends HTMLElement {
             </svg>
         </div>`;
 
-        AddContainerStyle(this._shadowRoot);
-        AddFontStyle(this._shadowRoot);
-        AddAnimationStyle(this._shadowRoot);
-        AddGlobalStyle(this._shadowRoot);
+        Utils.AddContainerStyle(this._shadowRoot);
+        Utils.AddFontStyle(this._shadowRoot);
+        Utils.AddAnimationStyle(this._shadowRoot);
+        Utils.AddGlobalStyle(this._shadowRoot);
         this._shadowRoot.appendChild(this._style);
         this.adtFunc().menuNavbarMobileHandler();
-        checkWindowWidth(this._shadowRoot);
+        Utils.checkWindowWidth(this._shadowRoot);
         this.adtFunc().scrollHeaderSticky();
     }
 
@@ -314,7 +314,7 @@ class pn_header extends HTMLElement {
 
         function handleResize() {
             console.log('Window resized!');
-            checkWindowWidth(self._shadowRoot);
+            Utils.checkWindowWidth(self._shadowRoot);
         }
 
         return { updateStyle: updateStyle, addClassList: addClassList, verifySignIn: verifySignIn, menuNavbarMobileHandler: menuNavbarMobileHandler, scrollHeaderSticky: scrollHeaderSticky, handleResize: handleResize }

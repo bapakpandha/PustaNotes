@@ -1,12 +1,9 @@
-
 class pn_notelist extends HTMLElement {
     constructor() {
         super();
         this._tabsElement = document.createElement('div');
-        this._noteitems = document.createElement('pn_noteitems');
         this._style = document.createElement('style');
         this.appendChild(this._tabsElement);
-        this.appendChild(this._noteitems);
     }
     
     connectedCallback() {
@@ -25,7 +22,6 @@ class pn_notelist extends HTMLElement {
         function addClassList() {
             self.style.display = 'block';
             self._tabsElement.classList.add('notes_info', 'tabs')
-            self._noteitems.classList.add('list_notes')
         }
         return {addClassList:addClassList}
     }

@@ -1,7 +1,8 @@
-function AddGlobalStyle(parentElement) {
-    const styleSheet = document.createElement('style');
+class Utils {
+    static AddGlobalStyle(parentElement) {
+        const styleSheet = document.createElement('style');
 
-    styleSheet.textContent = `
+        styleSheet.textContent = `
         :root {
             --main-color: #DCF2F1;
             --secondary-color: #7FC7D9;
@@ -63,13 +64,13 @@ function AddGlobalStyle(parentElement) {
 
     `;
 
-    parentElement.appendChild(styleSheet);
-}
+        parentElement.appendChild(styleSheet);
+    }
 
-function AddContainerStyle(parentElement) {
-    const styleSheet = document.createElement('style');
-    
-    const styles = `
+    static AddContainerStyle(parentElement) {
+        const styleSheet = document.createElement('style');
+
+        const styles = `
     .container {
         width: 100%;
         padding-right: 15px;
@@ -118,15 +119,15 @@ function AddContainerStyle(parentElement) {
         max-width: 100%;
     }
     `
-    
-    styleSheet.textContent = styles;
-    parentElement.appendChild(styleSheet);
-}
 
-function AddFontStyle(parentElement) {
-    const styleSheet = document.createElement('style');
-    
-    const styles = `
+        styleSheet.textContent = styles;
+        parentElement.appendChild(styleSheet);
+    }
+
+    static AddFontStyle(parentElement) {
+        const styleSheet = document.createElement('style');
+
+        const styles = `
         @font-face {
             font-family: 'Poppins';
             font-weight: 900;
@@ -169,15 +170,15 @@ function AddFontStyle(parentElement) {
             src: url('../../assets/fonts/Poppins/Poppins-ThinItalic.ttf') format('truetype');
         }
     `
-    
-    styleSheet.textContent = styles;
-    parentElement.appendChild(styleSheet);
-}
 
-function AddAnimationStyle(parentElement){
-    const styleSheet = document.createElement('style');
-    
-    const styles = `
+        styleSheet.textContent = styles;
+        parentElement.appendChild(styleSheet);
+    }
+
+    static AddAnimationStyle(parentElement) {
+        const styleSheet = document.createElement('style');
+
+        const styles = `
         @-webkit-keyframes gradien_background {
             0% {
                 background-position: 0% 50%
@@ -348,7 +349,7 @@ function AddAnimationStyle(parentElement){
             scale: 0.94;
             opacity: 0;
             transition: 0.9s;
-            transition-timing-function: cubic-bezier(0.5, 0, 0, 1);
+            transition-timing-static: cubic-bezier(0.5, 0, 0, 1);
         }
 
         .revealOn {
@@ -488,90 +489,229 @@ function AddAnimationStyle(parentElement){
             }
         }
     `
-    
-    styleSheet.textContent = styles;
-    parentElement.appendChild(styleSheet);
-}
 
-function setAttributeIfNotNull(parents = document, selector, property, value) {
-    var elements = parents.querySelectorAll(selector);
-    elements.forEach(function (element) {
-        if (element !== null) {
-            if (property === 'style') {
-                var styles = value.split(';');
-                styles.forEach(function (style) {
-                    if (style.trim() !== '') {
-                        var parts = style.split(':');
-                        var styleName = parts[0].trim();
-                        var styleValue = parts[1].trim();
-                        element.style[styleName] = styleValue;
-                    }
-                });
-            } else if (property === 'class') {
-                element.className = value;
-            } else if (property === 'dataset') {
-                var data = value.split(',');
-                data.forEach(function (item) {
-                    if (item.trim() !== '') {
-                        var parts = item.split(':');
-                        var dataName = parts[0].trim();
-                        var dataValue = parts[1].trim();
-                        element.dataset[dataName] = dataValue;
-                    }
-                });
-            } else if (property === 'text') {
-                element.innerHTML = value;
-            } else {
-                element[property] = value;
+        styleSheet.textContent = styles;
+        parentElement.appendChild(styleSheet);
+    }
+
+    static setAttributeIfNotNull(parents = document, selector, property, value) {
+        var elements = parents.querySelectorAll(selector);
+        elements.forEach(function (element) {
+            if (element !== null) {
+                if (property === 'style') {
+                    var styles = value.split(';');
+                    styles.forEach(function (style) {
+                        if (style.trim() !== '') {
+                            var parts = style.split(':');
+                            var styleName = parts[0].trim();
+                            var styleValue = parts[1].trim();
+                            element.style[styleName] = styleValue;
+                        }
+                    });
+                } else if (property === 'class') {
+                    element.className = value;
+                } else if (property === 'dataset') {
+                    var data = value.split(',');
+                    data.forEach(function (item) {
+                        if (item.trim() !== '') {
+                            var parts = item.split(':');
+                            var dataName = parts[0].trim();
+                            var dataValue = parts[1].trim();
+                            element.dataset[dataName] = dataValue;
+                        }
+                    });
+                } else if (property === 'text') {
+                    element.innerHTML = value;
+                } else {
+                    element[property] = value;
+                }
+            }
+        });
+    }
+
+    static checkWindowWidth(parents) {
+        if (window.matchMedia('(min-width: 992px) and (max-width: 1200px)').matches) {
+            this.setAttributeIfNotNull(parents, '.header', 'style', 'flex-direction: column; height: auto;');
+            this.setAttributeIfNotNull(parents, '.header .container-navbar', 'style', 'justify-content: center;');
+            this.setAttributeIfNotNull(parents, 'main .container-greet-button', 'style', 'font-size: 1rem;');
+            this.setAttributeIfNotNull(parents, '.header .navbar', 'style', 'width: 100%;');
+            this.setAttributeIfNotNull(parents, '.list-service .item', 'style', 'flex: 0 0 40%; margin: 1.5rem;');
+            this.setAttributeIfNotNull(parents, '.container-login .login-form', 'style', 'margin: 5rem 0;');
+        } else {
+            this.setAttributeIfNotNull(parents, '.header', 'style', 'flex-direction: ;');
+            this.setAttributeIfNotNull(parents, '.header .container-navbar', 'style', 'justify-content: ;');
+            this.setAttributeIfNotNull(parents, '.header .navbar', 'style', 'width: ;');
+            this.setAttributeIfNotNull(parents, 'main .container-greet-button', 'style', 'font-size: ;');
+            this.setAttributeIfNotNull(parents, '.list-service .item', 'style', 'flex: ; margin: ;');
+            this.setAttributeIfNotNull(parents, '.container-login .login-form', 'style', 'margin: ;');
+        }
+        if (window.matchMedia('(max-width: 992px)').matches) {
+            this.setAttributeIfNotNull(parents, '.menu', 'style', 'display: block;');
+            this.manipulateClass(parents, '.header', 'addClass', 'mobile');
+            this.manipulateClass(parents, '.greet', 'addClass', 'mobile');
+            this.manipulateClass(parents, '.container-about_us', 'addClass', 'mobile');
+            this.manipulateClass(parents, '.footer', 'addClass', 'mobile');
+            this.manipulateClass(parents, '.container-login', 'addClass', 'mobile');
+            this.setAttributeIfNotNull(parents, '.container-login .navigation>a>.content_text', 'text', '');
+        } else {
+            this.setAttributeIfNotNull(parents, '.menu', 'style', 'display: none;');
+            this.manipulateClass(parents, '.header', 'removeClass', 'mobile');
+            this.manipulateClass(parents, '.greet', 'removeClass', 'mobile');
+            this.manipulateClass(parents, '.container-about_us', 'removeClass', 'mobile');
+            this.manipulateClass(parents, '.footer', 'removeClass', 'mobile');
+            this.manipulateClass(parents, '.container-login', 'removeClass', 'mobile');
+            this.setAttributeIfNotNull(parents, '.container-login .navigation>a>.content_text', 'text', 'Kembali Ke Beranda');
+        }
+    }
+
+    static manipulateClass(parents = document, element, action, className) {
+        var targetElement = parents.querySelector(element);
+        if (targetElement) {
+            if (action === 'addClass') {
+                targetElement.classList.add(className);
+            } else if (action === 'removeClass') {
+                targetElement.classList.remove(className);
             }
         }
-    });
-}
-
-function checkWindowWidth(parents) {
-    if (window.matchMedia('(min-width: 992px) and (max-width: 1200px)').matches) {
-        setAttributeIfNotNull(parents, '.header', 'style', 'flex-direction: column; height: auto;');
-        setAttributeIfNotNull(parents, '.header .container-navbar', 'style', 'justify-content: center;');
-        setAttributeIfNotNull(parents, 'main .container-greet-button', 'style', 'font-size: 1rem;');
-        setAttributeIfNotNull(parents, '.header .navbar', 'style', 'width: 100%;');
-        setAttributeIfNotNull(parents, '.list-service .item', 'style', 'flex: 0 0 40%; margin: 1.5rem;');
-        setAttributeIfNotNull(parents, '.container-login .login-form', 'style', 'margin: 5rem 0;');
-    } else {
-        setAttributeIfNotNull(parents, '.header', 'style', 'flex-direction: ;');
-        setAttributeIfNotNull(parents, '.header .container-navbar', 'style', 'justify-content: ;');
-        setAttributeIfNotNull(parents, '.header .navbar', 'style', 'width: ;');
-        setAttributeIfNotNull(parents, 'main .container-greet-button', 'style', 'font-size: ;');
-        setAttributeIfNotNull(parents, '.list-service .item', 'style', 'flex: ; margin: ;');
-        setAttributeIfNotNull(parents, '.container-login .login-form', 'style', 'margin: ;');
     }
-    if (window.matchMedia('(max-width: 992px)').matches) {
-        setAttributeIfNotNull(parents, '.menu', 'style', 'display: block;');
-        manipulateClass(parents, '.header', 'addClass', 'mobile');
-        manipulateClass(parents, '.greet', 'addClass', 'mobile');
-        manipulateClass(parents, '.container-about_us', 'addClass', 'mobile');
-        manipulateClass(parents, '.footer', 'addClass', 'mobile');
-        manipulateClass(parents, '.container-login', 'addClass', 'mobile');
-        setAttributeIfNotNull(parents, '.container-login .navigation>a>.content_text', 'text', '');
-    } else {
-        setAttributeIfNotNull(parents, '.menu', 'style', 'display: none;');
-        manipulateClass(parents, '.header', 'removeClass', 'mobile');
-        manipulateClass(parents, '.greet', 'removeClass', 'mobile');
-        manipulateClass(parents, '.container-about_us', 'removeClass', 'mobile');
-        manipulateClass(parents, '.footer', 'removeClass', 'mobile');
-        manipulateClass(parents, '.container-login', 'removeClass', 'mobile');
-        setAttributeIfNotNull(parents, '.container-login .navigation>a>.content_text', 'text', 'Kembali Ke Beranda');
-    }
-}
 
-function manipulateClass(parents = document, element, action, className) {
-    var targetElement = parents.querySelector(element);
-    if (targetElement) {
-        if (action === 'addClass') {
-            targetElement.classList.add(className);
-        } else if (action === 'removeClass') {
-            targetElement.classList.remove(className);
+    static generalConfirmDialogBuilder() {
+        function ConfirmBox(element, params, title, value, showSuccess, ok_value, cancel_value) {
+            this.element = element;
+            this.params = params || {};
+            this.params.ok = params.ok;
+            this.params.cancel = params.cancel;
+            this.title = title || {};
+            this.value = value || {};
+            this.showSuccess = (showSuccess === false) ? false : true;
+            this.ok_value = ok_value || "OK"
+            this.cancel_value = cancel_value || "Batal"
+            this.init();
         }
+        ConfirmBox.prototype = {
+            init: function () {
+                this.instance = null;
+                this.create();
+                this.layout();
+                this.actions();
+            },
+            create: function () {
+                if (document.querySelector("#confirm-wrapper") === null) {
+                    var wrapper = document.createElement("div");
+                    wrapper.id = "confirm-wrapper";
+                    var html = "<div id='confirm-box'><h2 id='confirm-header-title'></h2><h2 id='confirm-header'></h2>";
+                    if (this.params.ok) { html += `<div id='confirm-buttons'><button id='confirm-ok'>${this.ok_value}</button>`; }
+                    if (this.params.cancel) { html += `<button type='button' id='confirm-cancel'>${this.cancel_value}</button></div>`; }
+                    html += "</div>";
+                    wrapper.innerHTML = html;
+                    document.body.appendChild(wrapper);
+                }
+                this.instance = document.querySelector("#confirm-wrapper");
+            },
+            layout: function () {
+                var wrapper = this.instance;
+                var winHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+                wrapper.style.height = winHeight + "px";
+            },
+            show: function (element) {
+                element.style.display = "flex";
+                element.style.opacity = 1;
+            },
+            hide: function (element) {
+                element.style.opacity = 0;
+                setTimeout(function () {
+                    element.remove();
+                }, 1000);
+            },
+            success: function (element) {
+                var element_success = "<div id='confirm-box'><svg class='checkmark' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 52 52' style='margin: 1rem;'><circle class='checkmark__circle2' cx='26' cy='26' r='30' fill='none'></circle><circle class='checkmark__circle' cx='26' cy='26' r='25' fill='none'></circle><path class='checkmark__check' fill='none' d='M14.1 27.2l7.1 7.2 16.7-16.8'></path></svg><h2 id='confirm-header-title' style='font-size: 1.5rem;margin: 1rem;'>Sukses</h2><div id='confirm-buttons'><button id='confirm-ok'>OK</button></div></div>";
+                element.innerHTML = element_success;
+                element.style.opacity = 1;
+                setTimeout(function () {
+                    element.remove();
+                }, 2000);
+            },
+            actions: function () {
+                var self = this;
+                if (self.value && Array.isArray(self.value) && self.title && Array.isArray(self.title)) {
+                    self.instance.querySelector("#confirm-header").innerHTML = self.value[0];
+                    self.instance.querySelector("#confirm-header-title").innerHTML = self.title[0];
+                    var currentIndex = 1;
+                    if (self.params.ok) {
+                        self.instance.querySelector("#confirm-ok").
+                            addEventListener("click", function () {
+                                if (currentIndex < self.value.length) {
+                                    self.instance.querySelector("#confirm-header").innerHTML = self.value[currentIndex];
+                                    self.instance.querySelector("#confirm-header-title").innerHTML = self.title[currentIndex];
+                                    currentIndex++;
+                                }
+                                else {
+                                    if (self.showSuccess) {
+                                        self.success(self.instance);
+                                    } else {
+                                        setTimeout(function () {
+                                            self.hide(self.instance);
+                                        }, 200);
+                                    }
+                                    setTimeout(function () {
+                                        self.params.ok();
+                                    }, 2000);
+                                }
+                            }, false);
+                    }
+                    if (self.params.cancel) self.instance.querySelector("#confirm-cancel").
+                        addEventListener("click", function () {
+                            self.hide(self.instance);
+                            setTimeout(function () {
+                                self.params.cancel();
+                            }, 1000);
+                        }, false);
+                }
+                else {
+                    if (self.element.dataset.question) { self.instance.querySelector("#confirm-header").innerHTML = self.element.dataset.question; }
+                    else if (self.value && typeof (self.value) === "string") { self.instance.querySelector("#confirm-header").innerHTML = self.value; }
+                    if (self.element.dataset.tooltip) { self.instance.querySelector("#confirm-header-title").innerHTML = self.element.dataset.tooltip; }
+                    else if (self.title && typeof (self.title) === "string") { self.instance.querySelector("#confirm-header-title").innerHTML = self.title; }
+                    self.show(self.instance);
+                    if (self.params.ok) {
+                        self.instance.querySelector("#confirm-ok").
+                            addEventListener("click", function () {
+                                self.success(self.instance);
+                                setTimeout(function () {
+                                    self.params.ok();
+                                }, 2000);
+                            }, false);
+                    }
+                    if (self.params.cancel) self.instance.querySelector("#confirm-cancel").
+                        addEventListener("click", function () {
+                            self.hide(self.instance);
+                            setTimeout(function () {
+                                self.params.cancel();
+                            }, 1000);
+                        }, false);
+                }
+            }
+        }
+        return ConfirmBox;
+    }
+
+    static formatDateToReadable(dateString) {
+        const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+        const months = [
+            'Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Aug',
+            'Sep', 'Okt', 'Nov', 'Des'
+        ];
+    
+        const date = new Date(dateString);
+        const dayName = days[date.getDay()];
+        const day = date.getDate();
+        const month = months[date.getMonth()];
+        const year = date.getFullYear();
+        const hours = date.getHours();
+        const minutes = date.getMinutes().toString().padStart(2, '0');
+    
+        return `${day} ${month} ${year} ${hours}.${minutes} WIB`;
     }
 }
+export default Utils
 
-export {AddFontStyle, AddContainerStyle, AddGlobalStyle, setAttributeIfNotNull, checkWindowWidth, AddAnimationStyle}
