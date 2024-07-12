@@ -118,6 +118,10 @@ class Notes {
   static deleteNoteById(id) {
     return notesData.filter(note => note.id !== id);
   }
+  static archiveNoteById(id) {
+    const note = notesData.find(note => note.id === id);
+    if (note) {note.archived = true;} else {return}
+  }
 }
 
 export default Notes;

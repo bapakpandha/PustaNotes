@@ -16,7 +16,7 @@ class PnNoteItem extends HTMLElement {
                     grid-template-columns: repeat(6, 1fr);
                     grid-template-rows: repeat(8, 1fr);
                     cursor:pointer;
-                    border: solid 1.5px black;
+                    border: solid 1.5px #F1F2F3;
                 }
         
             .notes_id {
@@ -49,7 +49,7 @@ class PnNoteItem extends HTMLElement {
                 display: grid;
                 align-items: center;
                 justify-items: start;
-                border-top: solid 1px black;
+                border-top: solid 1px #F1F2F3;
                 margin-top: -1.1rem;
             }
                     
@@ -88,14 +88,20 @@ class PnNoteItem extends HTMLElement {
             }
 
             .button_select {
-                grid-area: 8/6/8/8;
-                width: 64px;
+                grid-area: 8/5/8/7;
+                width: auto;
                 height: 32px;
                 display: grid;
-                align-items: end;
-                justify-items: end;
+                align-items: center;
+                justify-items: center;
                 justify-content: end;
+                grid-auto-flow: column;
+                column-gap: 8px;
+                transition: all .2s linear;
             }
+
+            .button_select:hover {
+            font-weight:bold;}
             </style>
             <div class="note">
                 <div class="notes_id">
@@ -135,6 +141,7 @@ class PnNoteItem extends HTMLElement {
                         </g>
                     </g>
                     </svg>
+                    <div>Arsipkan</div>
                 </div>
             </div>
         `;

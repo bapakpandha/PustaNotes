@@ -50,25 +50,18 @@ a {
 
 a[disabled="disabled"] {
     pointer-events: none;
-    /* cursor: wait; */
 }
 
 body {
     font-family: 'Poppins', sans-serif;
-    /* background-color: var(--secondary-color); */
 }
 
 body {
     font-family: 'Poppins', sans-serif;
-    /* background-color: var(--secondary-color); */
     width: 100%;
     box-sizing: border-box;
     background-image: url("../../src/img/pattern-bg-white.webp");
     background-repeat: repeat;
-    /* overflow: hidden; */
-    /* margin: 0px; */
-    /* display: flex; */
-    /* flex-direction: column; */
 }
 
 body>.container {

@@ -1,24 +1,24 @@
-import Notes from "../../database/notes.js" 
+import Notes from "../../database/notes.js"
 import Utils from "../utils/utils.js";
 class pn_noteitems extends HTMLElement {
-    
+
     constructor() {
         super();
         this._ContainerElement = document.createElement('div');
         this._style = document.createElement('style');
         this.appendChild(this._ContainerElement);
     }
-    
+
     connectedCallback() {
         this.render();
     }
 
     render() {
-        this._ContainerElement.innerHTML = 
-        `<div class=container><div class=title><h2>Cari Catatan</h2></div><div id=search><form action=javascript:void(0);><fieldset class=clearfix style=display:flex;flex-direction:row><input type=search value="Cari Catatan disini"name=search onblur='""==this.value&&(this.value="Cari Catatan disini")'onfocus='"Cari Catatan disini"==this.value&&(this.value="")'> <input type=submit value=Search class=button name=search_submit> <input type=submit value=Reset class=button></fieldset></form></div><div class="title" style="margin:1.8rem auto;"><button id="addNewNote" class="addNewNote">Tambah Catatan Baru</button></div><div class=content></div></div>
+        this._ContainerElement.innerHTML =
+            `<div class=container><div class=title><h2>Cari Catatan</h2></div><div id=search><form action=javascript:void(0);><fieldset class=clearfix style=display:flex;flex-direction:row><input type=search value="Cari Catatan disini"name=search onblur='""==this.value&&(this.value="Cari Catatan disini")'onfocus='"Cari Catatan disini"==this.value&&(this.value="")'> <input type=submit value=Search class=button name=search_submit> <input type=submit value=Reset name="reset_submit" class=button></fieldset></form></div><div class="title" style="margin:1.8rem auto;"><button id="addNewNote" class="addNewNote">Tambah Catatan Baru</button></div><div class=content></div></div>
            `
         this.execAdtFunct();
-    }   
+    }
 
     adtFunct() {
         self = this;
@@ -26,7 +26,7 @@ class pn_noteitems extends HTMLElement {
         function addClassList() {
             self.style.display = 'block';
         }
-        
+
         function clearContentNotes() {
             const content_element = self._ContainerElement.querySelector('div.content');
             content_element.innerHTML = "";
@@ -36,23 +36,24 @@ class pn_noteitems extends HTMLElement {
             const result = Notes.getAll();
             return result
         }
-        
-        function displayNotes(data) {
+
+        function displayNotes(data = getNotesData()) {
             clearContentNotes();
-            data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).forEach(note => {
+            let notesData = tabHandler().filteringDataBasedOnActiveTab(data);
+            notesData.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).forEach(note => {
                 const noteElement = document.createElement('pn-noteitem');
+                noteElement.setAttribute("data-idNote", note.id);
                 noteElement.innerHTML = `
-                    <span slot="notes_id">${note.id}</span>
                     <span slot="title">${note.title}</span>
                     <span slot="body">${note.body}</span>
                     <span slot="createdAt">${Utils.formatDateToReadable(note.createdAt)}</span>
-                    <span slot="archived">${note.archived}</span>
                 `;
                 const content_element = self._ContainerElement.querySelector('div.content');
-                
+
                 content_element.appendChild(noteElement);
-                
+
             });
+            categorizingHandler().addListenerButtonArchive();
         }
 
         function listenAddNoteButton() {
@@ -281,7 +282,7 @@ class pn_noteitems extends HTMLElement {
                 var submit = document.body.querySelector('#submitAddNewNote');
                 cancel.addEventListener('click', hideModal);
                 submit.addEventListener('click', submitNote);
-                
+
                 title_field.addEventListener('input', () => {
                     if (title_field.value.length < 5) {
                         title_warning.textContent = 'Judul Harus Lebih Dari 5 Karakter!';
@@ -335,14 +336,14 @@ class pn_noteitems extends HTMLElement {
                             return
                         }
                     }, [`Isi Catatan Kosong!`], [`Mohon tambahkan Isi catatan setidaknya 5 karakter`], false, "Ok");
-                } else if (title.length<5) {
+                } else if (title.length < 5) {
                     var ConfirmBox = Utils.generalConfirmDialogBuilder();
                     var confBox = new ConfirmBox(document.body, {
                         ok: function () {
                             return
                         }
                     }, [`Judul Catatan Minimal 5 Karakter!`], [`Mohon tambahkan Judul catatan setidaknya 5 karakter`], false, "Ok");
-                } else if (noteBody.length<5) {
+                } else if (noteBody.length < 5) {
                     var ConfirmBox = Utils.generalConfirmDialogBuilder();
                     var confBox = new ConfirmBox(document.body, {
                         ok: function () {
@@ -352,7 +353,7 @@ class pn_noteitems extends HTMLElement {
                 } else {
                     let NoteData = Notes.getAll();
                     if (!NoteData) {
-                        NoteData = { };
+                        NoteData = {};
                     }
                     const note_data = {
                         "id": note_id,
@@ -372,30 +373,33 @@ class pn_noteitems extends HTMLElement {
                         },
                         cancel: function () {
                         }
-                    }, [`Tambahkan Catatan?`], [`Apakah Anda yakin ingin menambahkan catatan berjudul "${title}" ke dalam Daftar Catatan?`], true, "Ok","Cancel");
+                    }, [`Tambahkan Catatan?`], [`Apakah Anda yakin ingin menambahkan catatan berjudul "${title}" ke dalam Daftar Catatan?`], true, "Ok", "Cancel");
                 }
             }
             return { showModal: showModal, hideModal: hideModal, submitNote: submitNote }
         }
 
         function generalSearchHandler() {
-            self = self;
+            // self = self;
             function handleSearch(searchString) {
                 var jsonDataString = self.adtFunct().getNotesData();
-                let filteredNotesName = jsonDataString.filter(note => note.title.toLowerCase().includes(searchString.toLowerCase()));
+                let filteredNotesName = jsonDataString.filter(note => note.title.toLowerCase().includes(searchString.toLowerCase()) ||
+                    note.body.toLowerCase().includes(searchString.toLowerCase()));
                 self.adtFunct().displayNotes(filteredNotesName);
             }
             function searchHandler() {
                 const searchBar = self._ContainerElement.querySelector('input[type="search"][name="search"]');
                 let timeoutId;
                 searchBar.addEventListener("keyup", e => {
-                    console.log(searchBar.value);
                     clearTimeout(timeoutId);
                     var searchString = e.target.value;
                     timeoutId = setTimeout(() => {
-                        handleSearch(searchString);
+                        if (searchString.length < 1) {
+                            self.adtFunct().displayNotes(self.adtFunct().getNotesData());
+                        } else { handleSearch(searchString); }
                     }, 100);
                 });
+
             }
             function searchButtonClickHandler() {
                 const searchBar = self._ContainerElement.querySelector('input[type="search"][name="search"]');
@@ -404,18 +408,85 @@ class pn_noteitems extends HTMLElement {
             }
             const searchButton = self._ContainerElement.querySelector('input[name="search_submit"]');
             searchButton.addEventListener("click", searchButtonClickHandler);
+            const reset_submit = self._ContainerElement.querySelector('input[name="reset_submit"]');
+            reset_submit.addEventListener("click", function(e) {displayNotes();self._ContainerElement.querySelector('input[type="search"][name="search"]').value = "Cari Catatan disini"}, false);
             searchHandler();
         }
 
-        return {addClassList:addClassList, getNotesData:getNotesData, displayNotes:displayNotes, listenAddNoteButton:listenAddNoteButton,addNewNoteHandlerExec:addNewNoteHandlerExec,clearContentNotes:clearContentNotes,generalSearchHandler:generalSearchHandler}
+        function categorizingHandler() {
+            // EVENT LISTENER
+            function addListenerButtonArchive() {
+                document.querySelector('pn-notes-wrapper').shadowRoot.querySelectorAll('pn-noteitem').forEach(noteItem => {
+                    const buttonSelect = noteItem.shadowRoot.querySelector('.button_select');
+                    buttonSelect.addEventListener('click', function () {
+                        let noteElement = noteItem.shadowRoot.host;
+                        const idNote = noteElement.getAttribute('data-idnote');
+                        let note_title = Notes.getAll().find(note => note.id === idNote).title;
+                        confirmTrigger(idNote, note_title);
+                        console.log(`Archive ${idNote} | ${note_title}`);
+                    });
+
+                });
+            }
+            // GENERALCONFIRMTRIGGER
+            function confirmTrigger(note_id, note_title = "") {
+                var ConfirmBox = Utils.generalConfirmDialogBuilder();
+                var confBox = new ConfirmBox(document.body, {
+                    ok: function () {
+                        Notes.archiveNoteById(note_id)
+                        displayNotes(Notes.getAll());
+                        return
+                    },
+                    cancel: function () {
+                        return
+                    }
+                }, [`Arsipkan Catatan?`, "Yakin?"], [`Apakah anda yakin ingin mengarsipkan catatan dengan judul: ${note_title}`, "Apakah Anda Yakin?"], true, "Arsipkan", "Batal", "Sukses Mengarsipkan");
+            }
+
+            return { addListenerButtonArchive: addListenerButtonArchive }
+        }
+
+        function tabHandler() {
+            function addEventListenerToTabs() {
+                const tabs_Element = self.parentElement.querySelectorAll('pn-notelist .notes_info.tabs div');
+                tabs_Element.forEach(tab => {
+                    tab.addEventListener('click', function () {
+                        if (!this.classList.contains('active')) {
+                            tabs_Element.forEach(t => t.classList.remove('active'));
+                            this.classList.add('active');
+                            displayNotes();
+                        }
+                    });
+                });
+                
+            }
+            function filteringDataBasedOnActiveTab(notes_data) {
+                const currentActiveElement = self.parentElement.querySelector('pn-notelist .notes_info.tabs div.active');
+                if (currentActiveElement) {
+                    const tabContent = currentActiveElement.textContent.trim();
+                    if (tabContent === 'Catatan Utama') {
+                        return notes_data.filter(note => note.archived === false);
+                    }
+                    else if (tabContent === 'Catatan Diarsipkan') {
+                        return notes_data.filter(note => note.archived === true);
+                    } else {
+                        return notes_data;
+                    }
+                }
+            }
+            return { addEventListenerToTabs: addEventListenerToTabs, filteringDataBasedOnActiveTab: filteringDataBasedOnActiveTab }
+        }
+
+        return { addClassList: addClassList, getNotesData: getNotesData, displayNotes: displayNotes, listenAddNoteButton: listenAddNoteButton, addNewNoteHandlerExec: addNewNoteHandlerExec, clearContentNotes: clearContentNotes, generalSearchHandler: generalSearchHandler, categorizingHandler: categorizingHandler, tabHandler:tabHandler }
     }
+
     execAdtFunct() {
         this.adtFunct().addClassList();
-        this.adtFunct().getNotesData();
         this.adtFunct().displayNotes(self.adtFunct().getNotesData());
         this.adtFunct().listenAddNoteButton();
         this.adtFunct().generalSearchHandler();
+        this.adtFunct().tabHandler().addEventListenerToTabs();
     }
 }
 
-customElements.define( 'pn-noteitems', pn_noteitems);
+customElements.define('pn-noteitems', pn_noteitems);

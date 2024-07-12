@@ -7,7 +7,7 @@ class pn_footer extends HTMLElement {
         this._footerElement = document.createElement('footer')
         this._style = document.createElement('style');
         this._shadowRoot.appendChild(this._footerElement);
-        window.addEventListener('resize', () => this.adtFunct().handleResize());
+        window.addEventListener('resize', () => Utils.checkWindowWidth(this._shadowRoot));
     }
 
     connectedCallback() {
@@ -266,6 +266,7 @@ class pn_footer extends HTMLElement {
             return style 
         }
         function handleResize() {
+            console.log('handke')
             Utils.checkWindowWidth(self._shadowRoot);
         }
         function globalStyle() {
