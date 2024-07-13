@@ -1,0 +1,1 @@
+import "./scripts/view/notes_views.js"
