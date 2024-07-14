@@ -17,10 +17,10 @@ class pn_notelist extends HTMLElement {
     }
   
     adtFunct() {
-      self = this;
+      var that = this;
       function addClassList() {
-        self.style.display = "block";
-        self._tabsElement.classList.add("notes_info", "tabs");
+        that.style.display = "block";
+        that._tabsElement.classList.add("notes_info", "tabs");
       }
       return { addClassList: addClassList };
     }

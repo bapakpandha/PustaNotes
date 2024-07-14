@@ -1,4 +1,5 @@
 import Notes from "../../database/notes.js";
+import NotesApi from "../../database/notes-api.js";
 import Utils from "../utils/utils.js";
 class pn_noteitems extends HTMLElement {
   constructor() {
@@ -6,6 +7,7 @@ class pn_noteitems extends HTMLElement {
     this._ContainerElement = document.createElement("div");
     this._style = document.createElement("style");
     this.appendChild(this._ContainerElement);
+    this.GeneralNoteData = {};
   }
 
   connectedCallback() {
@@ -19,26 +21,33 @@ class pn_noteitems extends HTMLElement {
   }
 
   adtFunct() {
-    self = this;
+    var that = this;
 
     function addClassList() {
-      self.style.display = "block";
+      that.style.display = "block";
     }
 
     function clearContentNotes() {
       const content_element =
-        self._ContainerElement.querySelector("div.content");
+        that._ContainerElement.querySelector("div.content");
       content_element.innerHTML = "";
     }
 
-    function getNotesData() {
-      const result = Notes.getAll();
-      return result;
-    }
+    const fetchAndDisplayNotes = async () => {
+      try {
+        const notes = await NotesApi.getAll();
+        const notes_archived = await NotesApi.getArchived();
+        const allNotes = notes.concat(notes_archived);
+        that.GeneralNoteData = allNotes;
+        displayNotes(allNotes);
+      } catch (error) {
+        console.log(error);
+      }
+    };
 
-    function displayNotes(data = getNotesData()) {
+    function displayNotes(data) {
       clearContentNotes();
-      let notesData = tabHandler().filteringDataBasedOnActiveTab(data);
+      let notesData = tabHandler().filteringDataBasedOnActiveTab(data)
       notesData
         .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
         .forEach((note) => {
@@ -50,16 +59,17 @@ class pn_noteitems extends HTMLElement {
                     <span slot="createdAt">${Utils.formatDateToReadable(note.createdAt)}</span>
                 `;
           const content_element =
-            self._ContainerElement.querySelector("div.content");
+            that._ContainerElement.querySelector("div.content");
 
           content_element.appendChild(noteElement);
         });
+      tabHandler().changeButtonWhenChangeTab()
       categorizingHandler().addListenerButtonArchive();
     }
 
     function listenAddNoteButton() {
       const addNoteElement =
-        self._ContainerElement.querySelector("#addNewNote");
+        that._ContainerElement.querySelector("#addNewNote");
       addNoteElement.addEventListener("click", addNewNoteHandler);
     }
 
@@ -67,8 +77,8 @@ class pn_noteitems extends HTMLElement {
       addNewNoteHandlerExec().showModal();
     }
 
-    function addNewNoteHandlerExec() {
-      self = self;
+    function addNewNoteHandlerExec(edit = false, id_note = null) {
+      that = that;
       function showModal() {
         if (document.querySelector(".addNewNote") === null) {
           var doc = document.createElement("div");
@@ -101,8 +111,17 @@ class pn_noteitems extends HTMLElement {
         var body_warning = document.body.querySelector("#warning_body");
         var cancel = document.body.querySelector("#cancelAddNewNote");
         var submit = document.body.querySelector("#submitAddNewNote");
+        let respon = {};
         cancel.addEventListener("click", hideModal);
         submit.addEventListener("click", submitNote);
+
+        if (edit = true && (id_note != null)) {
+          const note = that.GeneralNoteData.find(note => note.id === id_note);
+          if (note) {
+            title_field.value = note.title;
+            body_field.value = note.body;
+          }
+        }
 
         title_field.addEventListener("input", () => {
           if (title_field.value.length < 5) {
@@ -134,7 +153,6 @@ class pn_noteitems extends HTMLElement {
       function submitNote() {
         const modal = document.querySelector(".addNewNote");
         const dateNow = Date.now();
-        const note_id = `Notes-${dateNow}`;
         const title = modal.querySelector("#title").value;
         const noteBody = modal.querySelector("#note_body").value;
         var title_warning = document.body.querySelector("#warning_title");
@@ -200,36 +218,51 @@ class pn_noteitems extends HTMLElement {
             "Ok",
           );
         } else {
-          let NoteData = Notes.getAll();
-          if (!NoteData) {
-            NoteData = {};
-          }
           const note_data = {
-            id: note_id,
             title: title,
             body: noteBody,
-            createdAt: new Date(dateNow).toISOString(),
-            archived: false,
           };
+          let confirmValue = {};
+          if (edit=true){
+            confirmValue.title = ["Perbarui Catatan?"];confirmValue.body=[`Apakah Anda Yakin ingin menyimpan Perubahan pada catatan berjudul "${title}"?`];
+            confirmValue.ok="Simpan";confirmValue.success="Sukses Memperbarui Catatan";confirmValue.loading="Memperbarui Catatan...";confirmValue.failed="Gagal Memperbarui catatan!"
+          } else {
+            confirmValue.title=[`Tambahkan Catatan?`];confirmValue.body=[`Apakah Anda yakin ingin menambahkan catatan berjudul "${title}" ke dalam Daftar Catatan?`];confirmValue.ok="Tambahkan";confirmValue.success="Sukses Menambahkan Catatan";confirmValue.loading="Sedang Menambahkan...";confirmValue.failed="Gagal Menambahkan"}
           var ConfirmBox = Utils.generalConfirmDialogBuilder();
           var confBox = new ConfirmBox(
             modal,
             {
-              ok: function () {
-                Notes.addNote(note_data);
-                hideModal();
-                self.adtFunct().clearContentNotes();
-                self.adtFunct().displayNotes(self.adtFunct().getNotesData());
+              ok: async function () {
+                if (edit=true){
+                  const { response, responseJson, error } = await NotesApi.editNoteById(id_note, note_data);
+                  confirmValue.response = response; confirmValue.responseJson = responseJson; confirmValue.error=error;
+                  console.log(responseJson)
+                  console.log(response)
+                } else {
+                const { response, responseJson, error } = await NotesApi.addNote(note_data);
+                confirmValue.response = response; confirmValue.responseJson = responseJson; confirmValue.error=error;
+                }
+                if (confirmValue.error || !confirmValue.response.ok || (confirmValue.responseJson.status != 'success')) {
+                  confBox.failed(confBox.instance);
+                } else {
+                  confBox.success(confBox.instance);
+                  hideModal();
+                  that.adtFunct().fetchAndDisplayNotes();
+                }
               },
-              cancel: function () {},
+              cancel: function () {
+                return;
+              },
             },
-            [`Tambahkan Catatan?`],
-            [
-              `Apakah Anda yakin ingin menambahkan catatan berjudul "${title}" ke dalam Daftar Catatan?`,
-            ],
+          confirmValue.title,
+            confirmValue.body,
             true,
-            "Ok",
-            "Cancel",
+            confirmValue.ok,
+            "Batal",
+            confirmValue.success,
+            true,
+            confirmValue.loading,
+            confirmValue.failed
           );
         }
       }
@@ -241,18 +274,18 @@ class pn_noteitems extends HTMLElement {
     }
 
     function generalSearchHandler() {
-      // self = self;
+      // that = that;
       function handleSearch(searchString) {
-        var jsonDataString = self.adtFunct().getNotesData();
+        let jsonDataString = that.GeneralNoteData;
         let filteredNotesName = jsonDataString.filter(
           (note) =>
             note.title.toLowerCase().includes(searchString.toLowerCase()) ||
             note.body.toLowerCase().includes(searchString.toLowerCase()),
         );
-        self.adtFunct().displayNotes(filteredNotesName);
+        that.adtFunct().displayNotes(filteredNotesName);
       }
       function searchHandler() {
-        const searchBar = self._ContainerElement.querySelector(
+        const searchBar = that._ContainerElement.querySelector(
           'input[type="search"][name="search"]',
         );
         let timeoutId;
@@ -261,7 +294,7 @@ class pn_noteitems extends HTMLElement {
           var searchString = e.target.value;
           timeoutId = setTimeout(() => {
             if (searchString.length < 1) {
-              self.adtFunct().displayNotes(self.adtFunct().getNotesData());
+              that.adtFunct().displayNotes(that.GeneralNoteData);
             } else {
               handleSearch(searchString);
             }
@@ -269,24 +302,24 @@ class pn_noteitems extends HTMLElement {
         });
       }
       function searchButtonClickHandler() {
-        const searchBar = self._ContainerElement.querySelector(
+        const searchBar = that._ContainerElement.querySelector(
           'input[type="search"][name="search"]',
         );
         const searchString = searchBar.value;
         handleSearch(searchString);
       }
-      const searchButton = self._ContainerElement.querySelector(
+      const searchButton = that._ContainerElement.querySelector(
         'input[name="search_submit"]',
       );
       searchButton.addEventListener("click", searchButtonClickHandler);
-      const reset_submit = self._ContainerElement.querySelector(
+      const reset_submit = that._ContainerElement.querySelector(
         'input[name="reset_submit"]',
       );
       reset_submit.addEventListener(
         "click",
         function (e) {
           displayNotes();
-          self._ContainerElement.querySelector(
+          that._ContainerElement.querySelector(
             'input[type="search"][name="search"]',
           ).value = "Cari Catatan disini";
         },
@@ -303,41 +336,75 @@ class pn_noteitems extends HTMLElement {
           .shadowRoot.querySelectorAll("pn-noteitem")
           .forEach((noteItem) => {
             const buttonSelect =
-              noteItem.shadowRoot.querySelector(".button_select");
-            buttonSelect.addEventListener("click", function () {
-              let noteElement = noteItem.shadowRoot.host;
-              const idNote = noteElement.getAttribute("data-idnote");
-              let note_title = Notes.getAll().find(
-                (note) => note.id === idNote,
-              ).title;
-              confirmTrigger(idNote, note_title);
-            });
+              noteItem.shadowRoot.querySelectorAll(".button_select div");
+            buttonSelect.forEach((button) => {
+              button.addEventListener("click", function () {
+                let noteElement = noteItem.shadowRoot.host;
+                const idNote = noteElement.getAttribute("data-idnote");
+                const action = button.getAttribute("class");
+                let note_title = that.GeneralNoteData.find(
+                  (note) => note.id === idNote,
+                ).title;
+                if (action == "arsipkan") {
+                  confirmTrigger(idNote, note_title, action);
+                } else if (action == "hapus") {
+                  confirmTrigger(idNote, note_title, action);
+                } else if (action == "unarsipkan") {
+                  confirmTrigger(idNote, note_title, action);
+                } else if (action == "edit") {
+                  addNewNoteHandlerExec(true, idNote).showModal();
+                } else { console.log(action); return }
+              });
+            })
           });
       }
       // GENERALCONFIRMTRIGGER
-      function confirmTrigger(note_id, note_title = "") {
+      function confirmTrigger(note_id, note_title = "", action) {
+        let respon = {};
+        if (action == "arsipkan") {
+          respon["title"] = ["Arsipkan Catatan?", "Yakin?"]; respon["body"] = [`Apakah anda yakin ingin mengarsipkan catatan dengan judul: ${note_title}`, "Apakah Anda Yakin?"]; respon["ok"] = "Arsipkan"; respon["success"] = "Sukses Mengarsipkan"; respon["loading"] = "Sedang Mengarsipkan..."; respon["failed"] = "Gagal Mengarsipkan!";
+        } else if (action == "unarsipkan") {
+          respon["title"] = ["Unarsipkan Catatan?", "Yakin?"]; respon["body"] = [`Apakah anda yakin ingin membatalkan pengarsipan catatan dengan judul: ${note_title}`, "Apakah Anda Yakin?"]; respon["ok"] = "Unarsipkan"; respon["success"] = "Sukses Membatalkan Arsip"; respon["loading"] = "Sedang Meng-unarsipkan..."; respon["failed"] = "Gagal Meng-unarsipkan!";
+        } else if (action == "hapus") {
+          respon["title"] = ["Hapus Catatan?", "Yakin?"]; respon["body"] = [`Apakah anda yakin ingin menghapus catatan dengan judul: ${note_title}`, "Apakah Anda Yakin?"]; respon["ok"] = "Hapus"; respon["success"] = "Sukses Dihapus"; respon["loading"] = "Sedang Menghapus..."; respon["failed"] = "Gagal Menghapus!";
+        } else { return }
         var ConfirmBox = Utils.generalConfirmDialogBuilder();
         var confBox = new ConfirmBox(
           document.body,
           {
-            ok: function () {
-              Notes.archiveNoteById(note_id);
-              displayNotes(Notes.getAll());
-              return;
+            ok: async function () {
+              if (action == "hapus") {
+                const { response, responseJson, error } = await NotesApi.deleteNoteById(note_id);
+                respon["response"] = response; respon["responseJson"] = responseJson; respon["error"] = error;
+              } else if (action == "unarsipkan") {
+                const { response, responseJson, error } = await NotesApi.deleteNoteById(note_id);
+                respon["response"] = response; respon["responseJson"] = responseJson; respon["error"] = error;
+              } else if (action == "arsipkan") {
+                const { response, responseJson, error } = await NotesApi.archiveNoteById(note_id);
+                respon["response"] = response; respon["responseJson"] = responseJson; respon["error"] = error;
+              } else { console.log("bukan hapus bukan arsip") }
+              if (respon.error || !respon.response.ok || (respon.responseJson.status != 'success')) {
+                confBox.failed(confBox.instance);
+                console.error(`Sedang Gangguan: ${respon.responseJson.status} : ${respon.responseJson.message}`);
+                console.error(respon.response.error);
+              } else {
+                confBox.success(confBox.instance);
+                that.adtFunct().fetchAndDisplayNotes();
+              }
             },
             cancel: function () {
               return;
             },
+
           },
-          [`Arsipkan Catatan?`, "Yakin?"],
-          [
-            `Apakah anda yakin ingin mengarsipkan catatan dengan judul: ${note_title}`,
-            "Apakah Anda Yakin?",
-          ],
+          respon.title, respon.body,
           true,
-          "Arsipkan",
+          respon.ok,
           "Batal",
-          "Sukses Mengarsipkan",
+          respon.success,
+          true,
+          respon.loading,
+          respon.failed
         );
       }
 
@@ -345,8 +412,14 @@ class pn_noteitems extends HTMLElement {
     }
 
     function tabHandler() {
+      let tabContent = ""
+      let currentActiveElement = that.parentElement.querySelector(
+        "pn-notelist .notes_info.tabs div.active",
+      );
+      if (currentActiveElement) { tabContent = currentActiveElement.textContent.trim(); }
+
       function addEventListenerToTabs() {
-        const tabs_Element = self.parentElement.querySelectorAll(
+        const tabs_Element = that.parentElement.querySelectorAll(
           "pn-notelist .notes_info.tabs div",
         );
         tabs_Element.forEach((tab) => {
@@ -354,35 +427,48 @@ class pn_noteitems extends HTMLElement {
             if (!this.classList.contains("active")) {
               tabs_Element.forEach((t) => t.classList.remove("active"));
               this.classList.add("active");
-              displayNotes();
+              displayNotes(that.GeneralNoteData);
             }
           });
         });
       }
+
       function filteringDataBasedOnActiveTab(notes_data) {
-        const currentActiveElement = self.parentElement.querySelector(
-          "pn-notelist .notes_info.tabs div.active",
-        );
-        if (currentActiveElement) {
-          const tabContent = currentActiveElement.textContent.trim();
+        if (tabContent) {
           if (tabContent === "Catatan Utama") {
-            return notes_data.filter((note) => note.archived === false);
+            return notes_data.filter((note) => note.archived == false);
           } else if (tabContent === "Catatan Diarsipkan") {
-            return notes_data.filter((note) => note.archived === true);
+            return notes_data.filter((note) => note.archived == true);
           } else {
             return notes_data;
           }
         }
       }
+
+      function changeButtonWhenChangeTab() {
+        let items = document.querySelector("pn-notes-wrapper").shadowRoot.querySelectorAll("pn-noteitem");
+        if (tabContent === "Catatan Utama") {
+        } else if (tabContent === "Catatan Diarsipkan") {
+          items.forEach((item) => {
+            let buttonArchive = item.shadowRoot.querySelector(".button_select div.arsipkan");
+            buttonArchive.innerHTML = `<svg width="20px" height="20px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <path fill="none" d="M0 0h24v24H0z"></path> <path fill-rule="nonzero" d="M20 3l2 4v13a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V7.004L4 3h16zm-8 7l-4 4h3v4h2v-4h3l-4-4zm6.764-5H5.236l-.999 2h15.527l-1-2z"></path> </g> </g></svg>`;
+            buttonArchive.className = "unarsipkan"
+          });
+
+        } else {
+          console.log("tabCOntentKosong")
+        }
+      }
+
       return {
         addEventListenerToTabs: addEventListenerToTabs,
         filteringDataBasedOnActiveTab: filteringDataBasedOnActiveTab,
+        changeButtonWhenChangeTab: changeButtonWhenChangeTab,
       };
     }
 
     return {
       addClassList: addClassList,
-      getNotesData: getNotesData,
       displayNotes: displayNotes,
       listenAddNoteButton: listenAddNoteButton,
       addNewNoteHandlerExec: addNewNoteHandlerExec,
@@ -390,12 +476,13 @@ class pn_noteitems extends HTMLElement {
       generalSearchHandler: generalSearchHandler,
       categorizingHandler: categorizingHandler,
       tabHandler: tabHandler,
+      fetchAndDisplayNotes: fetchAndDisplayNotes,
     };
   }
 
   execAdtFunct() {
     this.adtFunct().addClassList();
-    this.adtFunct().displayNotes(self.adtFunct().getNotesData());
+    this.adtFunct().fetchAndDisplayNotes();
     this.adtFunct().listenAddNoteButton();
     this.adtFunct().generalSearchHandler();
     this.adtFunct().tabHandler().addEventListenerToTabs();
