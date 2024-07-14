@@ -247,7 +247,7 @@ class Utils {
           "Batal",
           "Sukses Mengarsipkan",
           true,
-          "Sedang Mengarsipkan...",
+          "Sedang Mengarsipkan",
           "Gagal Mengarsipkan"
         );
      * 
@@ -335,9 +335,10 @@ class Utils {
       loading(element) {
         const loadingHtml = `
               <div id='confirm-box'>
-                  <h2 id='confirm-header-title'>${this.loadingValue}</h2>
-                  <div class='loading-spinner'></div>
-              </div>`;
+              <div class='loader'></div>
+                  <h2 id='confirm-header-title'>${this.loadingValue}<span class="wait"></span></h2>
+              </div>
+              <style>.wait:after{content:' .';animation:2s steps(7,end) infinite dots}@keyframes dots{0%,20%{color:transparent;text-shadow:.25em 0 0 transparent,.5em 0 0 transparent}40%{color:#fff;text-shadow:.25em 0 0 transparent,.5em 0 0 transparent}60%{text-shadow:.25em 0 0 #fff,.5em 0 0 transparent}100%,80%{text-shadow:.25em 0 0 #fff,.5em 0 0 #fff}}</style>`;
         element.innerHTML = loadingHtml;
         element.style.opacity = 1;
       },

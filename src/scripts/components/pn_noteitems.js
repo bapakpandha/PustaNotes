@@ -15,7 +15,7 @@ class pn_noteitems extends HTMLElement {
   }
 
   render() {
-    this._ContainerElement.innerHTML = `<div class=container><div class=title><h2>Cari Catatan</h2></div><div id=search><form action=javascript:void(0);><fieldset class=clearfix style=display:flex;flex-direction:row><input type=search value="Cari Catatan disini"name=search onblur='""==this.value&&(this.value="Cari Catatan disini")'onfocus='"Cari Catatan disini"==this.value&&(this.value="")'> <input type=submit value=Search class=button name=search_submit> <input type=submit value=Reset name="reset_submit" class=button></fieldset></form></div><div class="title" style="margin:1.8rem auto;"><button id="addNewNote" class="addNewNote">Tambah Catatan Baru</button></div><div class=content></div></div>
+    this._ContainerElement.innerHTML = `<div class=container><div class=title><h2>Cari Catatan</h2></div><div id=search><form action=javascript:void(0);><fieldset class=clearfix style=display:flex;flex-direction:row><input type=search value="Cari Catatan disini"name=search onblur='""==this.value&&(this.value="Cari Catatan disini")'onfocus='"Cari Catatan disini"==this.value&&(this.value="")'> <input type=submit value=Search class=button name=search_submit> <input type=submit value=Reset name="reset_submit" class=button></fieldset></form></div><div id="newNoteTrigger" class="title" style="margin:1.8rem auto;"><button id="addNewNote" class="addNewNote">Tambah Catatan Baru</button></div><div class=content></div></div>
            `;
     this.execAdtFunct();
   }
@@ -46,6 +46,7 @@ class pn_noteitems extends HTMLElement {
     };
 
     function displayNotes(data) {
+      if (Object.keys(that.GeneralNoteData).length<1){return}
       clearContentNotes();
       let notesData = tabHandler().filteringDataBasedOnActiveTab(data)
       notesData
@@ -74,7 +75,7 @@ class pn_noteitems extends HTMLElement {
     }
 
     function addNewNoteHandler() {
-      addNewNoteHandlerExec().showModal();
+      addNewNoteHandlerExec(false, null).showModal();
     }
 
     function addNewNoteHandlerExec(edit = false, id_note = null) {
@@ -83,11 +84,13 @@ class pn_noteitems extends HTMLElement {
         if (document.querySelector(".addNewNote") === null) {
           var doc = document.createElement("div");
           doc.classList.add("addNewNote");
+          let modal_title = "Tambahkan Catatan Baru";
+          if (edit) {modal_title = "Edit Catatan"}
           var element = `
                         <div class=demo-page>
                             <main class=demo-page-content>
                                 <section>
-                                    <h1><svg style="display:block;margin:auto;" fill="#000000" height="24px" width="24px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 345.369 345.369" xml:space="preserve"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <g> <g> <g> <path d="M199.654,105.629H49.965c-4.143,0-7.5-3.357-7.5-7.5s3.357-7.5,7.5-7.5h149.689c4.142,0,7.5,3.357,7.5,7.5 S203.796,105.629,199.654,105.629z"></path> </g> <g> <path d="M163.922,139.246H49.965c-4.143,0-7.5-3.357-7.5-7.5c0-4.143,3.357-7.5,7.5-7.5h113.957c4.142,0,7.5,3.357,7.5,7.5 C171.422,135.889,168.063,139.246,163.922,139.246z"></path> </g> <g> <path d="M87.682,240.096H49.965c-4.143,0-7.5-3.357-7.5-7.5c0-4.143,3.357-7.5,7.5-7.5h37.717c4.142,0,7.5,3.357,7.5,7.5 C95.182,236.738,91.823,240.096,87.682,240.096z"></path> </g> <g> <path d="M71.332,273.713H49.965c-4.143,0-7.5-3.357-7.5-7.5c0-4.143,3.357-7.5,7.5-7.5h21.367c4.142,0,7.5,3.357,7.5,7.5 C78.832,270.355,75.474,273.713,71.332,273.713z"></path> </g> <path d="M333.404,34.782l-17.108-12.757c-4.308-3.212-9.605-4.558-14.923-3.779c-5.316,0.775-10.012,3.573-13.223,7.88 c-0.002,0.002-0.004,0.005-0.005,0.007l-42.411,57.48V26.529c0-4.143-3.357-7.5-7.5-7.5h-31.08V7.5c0-4.143-3.358-7.5-7.5-7.5 c-4.143,0-7.5,3.357-7.5,7.5v11.529H169.73V7.5c0-4.143-3.357-7.5-7.5-7.5c-4.142,0-7.5,3.357-7.5,7.5v11.529h-22.422V7.5 c0-4.143-3.357-7.5-7.5-7.5c-4.143,0-7.5,3.357-7.5,7.5v11.529H94.887V7.5c0-4.143-3.358-7.5-7.5-7.5c-4.143,0-7.5,3.357-7.5,7.5 v11.529H57.465V7.5c0-4.143-3.358-7.5-7.5-7.5c-4.143,0-7.5,3.357-7.5,7.5v11.529H11.383c-4.142,0-7.5,3.357-7.5,7.5v311.34 c0,4.143,3.358,7.5,7.5,7.5h226.852c4.143,0,7.5-3.357,7.5-7.5V188.138l91.767-125.204c0.001-0.002,0.003-0.003,0.005-0.005 C344.134,54.038,342.295,41.412,333.404,34.782z M230.734,330.369H18.883V34.029h23.582v11.527c0,4.143,3.357,7.5,7.5,7.5 c4.142,0,7.5-3.357,7.5-7.5V34.029h22.422v11.527c0,4.143,3.357,7.5,7.5,7.5c4.142,0,7.5-3.357,7.5-7.5V34.029h22.422v11.527 c0,4.143,3.357,7.5,7.5,7.5c4.143,0,7.5-3.357,7.5-7.5V34.029h22.422v11.527c0,4.143,3.358,7.5,7.5,7.5 c4.143,0,7.5-3.357,7.5-7.5V34.029h22.424v11.527c0,4.143,3.357,7.5,7.5,7.5c4.142,0,7.5-3.357,7.5-7.5V34.029h23.58v70.166 l-39.113,53.668H49.965c-4.143,0-7.5,3.357-7.5,7.5c0,4.143,3.357,7.5,7.5,7.5h130.725c0,0-42.642,58.513-42.65,58.525 c0,0,0.002,0,0.004,0c-0.484,0.673-0.87,1.432-1.115,2.272l-17.15,58.669H49.965c-4.143,0-7.5,3.357-7.5,7.5 c0,4.143,3.357,7.5,7.5,7.5c0,0,75.515-0.006,75.555-0.006c0-0.001-0.001-0.002-0.002-0.002c1.373-0.022,2.744-0.413,3.951-1.193 l56.059-36.229c0.771-0.498,1.412-1.119,1.932-1.813c0.018-0.024,43.275-59.367,43.275-59.367V330.369z M148.296,248.23 l20.024,14.932l-30.069,19.432L148.296,248.23z M179.861,253.057l-25.305-18.869L272.844,71.883l25.305,18.869L179.861,253.057z M307.05,78.678l-25.306-18.869l8.076-10.83l25.305,18.871L307.05,78.678z M325.48,53.962c-0.002,0.002-0.004,0.005-0.005,0.007 l-1.384,1.855l-25.305-18.871l1.383-1.854c0.002-0.002,0.004-0.004,0.006-0.006c0.816-1.095,2.01-1.807,3.361-2.004 c1.353-0.196,2.697,0.146,3.791,0.961l17.109,12.757C326.697,48.492,327.165,51.702,325.48,53.962z"></path> </g> </g> </g> </g></svg> Tambahkan Catatan Baru</h1>
+                                    <h1><svg style="display:block;margin:auto;" fill="#000000" height="24px" width="24px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 345.369 345.369" xml:space="preserve"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <g> <g> <g> <path d="M199.654,105.629H49.965c-4.143,0-7.5-3.357-7.5-7.5s3.357-7.5,7.5-7.5h149.689c4.142,0,7.5,3.357,7.5,7.5 S203.796,105.629,199.654,105.629z"></path> </g> <g> <path d="M163.922,139.246H49.965c-4.143,0-7.5-3.357-7.5-7.5c0-4.143,3.357-7.5,7.5-7.5h113.957c4.142,0,7.5,3.357,7.5,7.5 C171.422,135.889,168.063,139.246,163.922,139.246z"></path> </g> <g> <path d="M87.682,240.096H49.965c-4.143,0-7.5-3.357-7.5-7.5c0-4.143,3.357-7.5,7.5-7.5h37.717c4.142,0,7.5,3.357,7.5,7.5 C95.182,236.738,91.823,240.096,87.682,240.096z"></path> </g> <g> <path d="M71.332,273.713H49.965c-4.143,0-7.5-3.357-7.5-7.5c0-4.143,3.357-7.5,7.5-7.5h21.367c4.142,0,7.5,3.357,7.5,7.5 C78.832,270.355,75.474,273.713,71.332,273.713z"></path> </g> <path d="M333.404,34.782l-17.108-12.757c-4.308-3.212-9.605-4.558-14.923-3.779c-5.316,0.775-10.012,3.573-13.223,7.88 c-0.002,0.002-0.004,0.005-0.005,0.007l-42.411,57.48V26.529c0-4.143-3.357-7.5-7.5-7.5h-31.08V7.5c0-4.143-3.358-7.5-7.5-7.5 c-4.143,0-7.5,3.357-7.5,7.5v11.529H169.73V7.5c0-4.143-3.357-7.5-7.5-7.5c-4.142,0-7.5,3.357-7.5,7.5v11.529h-22.422V7.5 c0-4.143-3.357-7.5-7.5-7.5c-4.143,0-7.5,3.357-7.5,7.5v11.529H94.887V7.5c0-4.143-3.358-7.5-7.5-7.5c-4.143,0-7.5,3.357-7.5,7.5 v11.529H57.465V7.5c0-4.143-3.358-7.5-7.5-7.5c-4.143,0-7.5,3.357-7.5,7.5v11.529H11.383c-4.142,0-7.5,3.357-7.5,7.5v311.34 c0,4.143,3.358,7.5,7.5,7.5h226.852c4.143,0,7.5-3.357,7.5-7.5V188.138l91.767-125.204c0.001-0.002,0.003-0.003,0.005-0.005 C344.134,54.038,342.295,41.412,333.404,34.782z M230.734,330.369H18.883V34.029h23.582v11.527c0,4.143,3.357,7.5,7.5,7.5 c4.142,0,7.5-3.357,7.5-7.5V34.029h22.422v11.527c0,4.143,3.357,7.5,7.5,7.5c4.142,0,7.5-3.357,7.5-7.5V34.029h22.422v11.527 c0,4.143,3.357,7.5,7.5,7.5c4.143,0,7.5-3.357,7.5-7.5V34.029h22.422v11.527c0,4.143,3.358,7.5,7.5,7.5 c4.143,0,7.5-3.357,7.5-7.5V34.029h22.424v11.527c0,4.143,3.357,7.5,7.5,7.5c4.142,0,7.5-3.357,7.5-7.5V34.029h23.58v70.166 l-39.113,53.668H49.965c-4.143,0-7.5,3.357-7.5,7.5c0,4.143,3.357,7.5,7.5,7.5h130.725c0,0-42.642,58.513-42.65,58.525 c0,0,0.002,0,0.004,0c-0.484,0.673-0.87,1.432-1.115,2.272l-17.15,58.669H49.965c-4.143,0-7.5,3.357-7.5,7.5 c0,4.143,3.357,7.5,7.5,7.5c0,0,75.515-0.006,75.555-0.006c0-0.001-0.001-0.002-0.002-0.002c1.373-0.022,2.744-0.413,3.951-1.193 l56.059-36.229c0.771-0.498,1.412-1.119,1.932-1.813c0.018-0.024,43.275-59.367,43.275-59.367V330.369z M148.296,248.23 l20.024,14.932l-30.069,19.432L148.296,248.23z M179.861,253.057l-25.305-18.869L272.844,71.883l25.305,18.869L179.861,253.057z M307.05,78.678l-25.306-18.869l8.076-10.83l25.305,18.871L307.05,78.678z M325.48,53.962c-0.002,0.002-0.004,0.005-0.005,0.007 l-1.384,1.855l-25.305-18.871l1.383-1.854c0.002-0.002,0.004-0.004,0.006-0.006c0.816-1.095,2.01-1.807,3.361-2.004 c1.353-0.196,2.697,0.146,3.791,0.961l17.109,12.757C326.697,48.492,327.165,51.702,325.48,53.962z"></path> </g> </g> </g> </g></svg> ${modal_title}</h1>
                                     <div class=nice-form-group><label>Judul Catatan</label> <input type="text" id=title
                                             placeholder="Contoh: Deadline Coding Front End" required><span id="warning_title" style="padding: 0.5rem 0.2rem;display: none;color: red;">Judul Tidak Boleh Kosong!</span></div>
                                     <div class=nice-form-group><label>Isi Catatan</label> <textarea cols=10 id=note_body
@@ -223,17 +226,19 @@ class pn_noteitems extends HTMLElement {
             body: noteBody,
           };
           let confirmValue = {};
-          if (edit=true){
+          if (edit==true) {
             confirmValue.title = ["Perbarui Catatan?"];confirmValue.body=[`Apakah Anda Yakin ingin menyimpan Perubahan pada catatan berjudul "${title}"?`];
-            confirmValue.ok="Simpan";confirmValue.success="Sukses Memperbarui Catatan";confirmValue.loading="Memperbarui Catatan...";confirmValue.failed="Gagal Memperbarui catatan!"
+            confirmValue.ok="Simpan";confirmValue.success="Sukses Memperbarui Catatan";confirmValue.loading="Memperbarui Catatan";confirmValue.failed="Gagal Memperbarui catatan!"
           } else {
-            confirmValue.title=[`Tambahkan Catatan?`];confirmValue.body=[`Apakah Anda yakin ingin menambahkan catatan berjudul "${title}" ke dalam Daftar Catatan?`];confirmValue.ok="Tambahkan";confirmValue.success="Sukses Menambahkan Catatan";confirmValue.loading="Sedang Menambahkan...";confirmValue.failed="Gagal Menambahkan"}
+            confirmValue.title=[`Tambahkan Catatan?`];confirmValue.body=[`Apakah Anda yakin ingin menambahkan catatan berjudul "${title}" ke dalam Daftar Catatan?`];confirmValue.ok="Tambahkan";confirmValue.success="Sukses Menambahkan Catatan";confirmValue.loading="Sedang Menambahkan";confirmValue.failed="Gagal Menambahkan"}
           var ConfirmBox = Utils.generalConfirmDialogBuilder();
+          console.log(confirmValue)
+          console.log(edit)
           var confBox = new ConfirmBox(
             modal,
             {
               ok: async function () {
-                if (edit=true){
+                if (edit==true){
                   const { response, responseJson, error } = await NotesApi.editNoteById(id_note, note_data);
                   confirmValue.response = response; confirmValue.responseJson = responseJson; confirmValue.error=error;
                   console.log(responseJson)
@@ -275,6 +280,7 @@ class pn_noteitems extends HTMLElement {
 
     function generalSearchHandler() {
       // that = that;
+      if (Object.keys(that.GeneralNoteData).length<1){return}
       function handleSearch(searchString) {
         let jsonDataString = that.GeneralNoteData;
         let filteredNotesName = jsonDataString.filter(
@@ -318,7 +324,7 @@ class pn_noteitems extends HTMLElement {
       reset_submit.addEventListener(
         "click",
         function (e) {
-          displayNotes();
+          displayNotes(that.GeneralNoteData);
           that._ContainerElement.querySelector(
             'input[type="search"][name="search"]',
           ).value = "Cari Catatan disini";
@@ -362,11 +368,11 @@ class pn_noteitems extends HTMLElement {
       function confirmTrigger(note_id, note_title = "", action) {
         let respon = {};
         if (action == "arsipkan") {
-          respon["title"] = ["Arsipkan Catatan?", "Yakin?"]; respon["body"] = [`Apakah anda yakin ingin mengarsipkan catatan dengan judul: ${note_title}`, "Apakah Anda Yakin?"]; respon["ok"] = "Arsipkan"; respon["success"] = "Sukses Mengarsipkan"; respon["loading"] = "Sedang Mengarsipkan..."; respon["failed"] = "Gagal Mengarsipkan!";
+          respon["title"] = ["Arsipkan Catatan?", "Yakin?"]; respon["body"] = [`Apakah anda yakin ingin mengarsipkan catatan dengan judul: ${note_title}`, "Apakah Anda Yakin?"]; respon["ok"] = "Arsipkan"; respon["success"] = "Sukses Mengarsipkan"; respon["loading"] = "Sedang Mengarsipkan"; respon["failed"] = "Gagal Mengarsipkan!";
         } else if (action == "unarsipkan") {
-          respon["title"] = ["Unarsipkan Catatan?", "Yakin?"]; respon["body"] = [`Apakah anda yakin ingin membatalkan pengarsipan catatan dengan judul: ${note_title}`, "Apakah Anda Yakin?"]; respon["ok"] = "Unarsipkan"; respon["success"] = "Sukses Membatalkan Arsip"; respon["loading"] = "Sedang Meng-unarsipkan..."; respon["failed"] = "Gagal Meng-unarsipkan!";
+          respon["title"] = ["Unarsipkan Catatan?", "Yakin?"]; respon["body"] = [`Apakah anda yakin ingin membatalkan pengarsipan catatan dengan judul: ${note_title}`, "Apakah Anda Yakin?"]; respon["ok"] = "Unarsipkan"; respon["success"] = "Sukses Membatalkan Arsip"; respon["loading"] = "Sedang Meng-unarsipkan"; respon["failed"] = "Gagal Meng-unarsipkan!";
         } else if (action == "hapus") {
-          respon["title"] = ["Hapus Catatan?", "Yakin?"]; respon["body"] = [`Apakah anda yakin ingin menghapus catatan dengan judul: ${note_title}`, "Apakah Anda Yakin?"]; respon["ok"] = "Hapus"; respon["success"] = "Sukses Dihapus"; respon["loading"] = "Sedang Menghapus..."; respon["failed"] = "Gagal Menghapus!";
+          respon["title"] = ["Hapus Catatan?", "Yakin?"]; respon["body"] = [`Apakah anda yakin ingin menghapus catatan dengan judul: ${note_title}`, "Apakah Anda Yakin?"]; respon["ok"] = "Hapus"; respon["success"] = "Sukses Dihapus"; respon["loading"] = "Sedang Menghapus"; respon["failed"] = "Gagal Menghapus!";
         } else { return }
         var ConfirmBox = Utils.generalConfirmDialogBuilder();
         var confBox = new ConfirmBox(
@@ -377,7 +383,7 @@ class pn_noteitems extends HTMLElement {
                 const { response, responseJson, error } = await NotesApi.deleteNoteById(note_id);
                 respon["response"] = response; respon["responseJson"] = responseJson; respon["error"] = error;
               } else if (action == "unarsipkan") {
-                const { response, responseJson, error } = await NotesApi.deleteNoteById(note_id);
+                const { response, responseJson, error } = await NotesApi.unarchiveNoteById(note_id);
                 respon["response"] = response; respon["responseJson"] = responseJson; respon["error"] = error;
               } else if (action == "arsipkan") {
                 const { response, responseJson, error } = await NotesApi.archiveNoteById(note_id);
@@ -434,7 +440,8 @@ class pn_noteitems extends HTMLElement {
       }
 
       function filteringDataBasedOnActiveTab(notes_data) {
-        if (tabContent) {
+        console.log(Object.keys(that.GeneralNoteData))
+        if (tabContent && Object.keys(that.GeneralNoteData).length>0) {
           if (tabContent === "Catatan Utama") {
             return notes_data.filter((note) => note.archived == false);
           } else if (tabContent === "Catatan Diarsipkan") {
@@ -447,14 +454,16 @@ class pn_noteitems extends HTMLElement {
 
       function changeButtonWhenChangeTab() {
         let items = document.querySelector("pn-notes-wrapper").shadowRoot.querySelectorAll("pn-noteitem");
-        if (tabContent === "Catatan Utama") {
+        let newNote = that._ContainerElement.querySelector(".container #newNoteTrigger");
+        if (tabContent === "Catatan Utama") { newNote.style.display = "block";
         } else if (tabContent === "Catatan Diarsipkan") {
           items.forEach((item) => {
             let buttonArchive = item.shadowRoot.querySelector(".button_select div.arsipkan");
             buttonArchive.innerHTML = `<svg width="20px" height="20px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <path fill="none" d="M0 0h24v24H0z"></path> <path fill-rule="nonzero" d="M20 3l2 4v13a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V7.004L4 3h16zm-8 7l-4 4h3v4h2v-4h3l-4-4zm6.764-5H5.236l-.999 2h15.527l-1-2z"></path> </g> </g></svg>`;
             buttonArchive.className = "unarsipkan"
           });
-
+          
+          newNote.style.display = "none";
         } else {
           console.log("tabCOntentKosong")
         }

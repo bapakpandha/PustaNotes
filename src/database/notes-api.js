@@ -1,5 +1,5 @@
-const baseUrl = "http://127.0.0.1/restful-api";
-// const baseUrl = "https://notes-api.dicoding.dev/v2/";
+// const baseUrl = "http://127.0.0.1/restful-api";
+const baseUrl = "https://notes-api.dicoding.dev/v2/";
 
 class NotesApi {
     static async getAll() {
@@ -44,6 +44,7 @@ class NotesApi {
         }
 
         const responseJson = await response.json();
+        console.log(responseJson)
         const { data: note } = responseJson;
 
         if (!note) {
