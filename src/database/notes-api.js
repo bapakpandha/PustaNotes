@@ -1,39 +1,27 @@
-// const baseUrl = "http://127.0.0.1/restful-api";
-const baseUrl = "https://notes-api.dicoding.dev/v2/";
+const baseUrl = "http://127.0.0.1/restful-api";
+// const baseUrl = "https://notes-api.dicoding.dev/v2/";
 
 class NotesApi {
     static async getAll() {
-        const response = await fetch(`${baseUrl}/notes`);
 
-        if (!(response.status >= 200 && response.status < 300)) {
-            throw new Error("Gagal Menampilkan Data");
+        try {
+            const response = await fetch(`${baseUrl}/notes`);
+            const responseJson = await response.json();
+            return { response, responseJson };
+        } catch (error) {
+            return { error };
         }
 
-        const responseJson = await response.json();
-        const { data: notes } = responseJson;
-
-        if (notes.length <= 0) {
-            throw new Error('Catatan Tidak Ditemukan');
-        }
-
-        return notes;
     }
 
     static async getArchived() {
-        const response = await fetch(`${baseUrl}/notes/archived`);
-
-        if (!(response.status >= 200 && response.status < 300)) {
-            throw new Error("Gagal Menampilkan Data");
+        try {
+            const response_AR = await fetch(`${baseUrl}/notes/archived`);
+            const responseJson_AR = await response_AR.json();
+            return { response_AR, responseJson_AR };
+        } catch (error_AR) {
+            return { error_AR };
         }
-
-        const responseJson = await response.json();
-        const { data: notes } = responseJson;
-
-        if (notes.length <= 0) {
-            throw new Error('Catatan Tidak Ditemukan');
-        }
-
-        return notes;
     }
 
     static async getNoteById(id) {
@@ -44,7 +32,7 @@ class NotesApi {
         }
 
         const responseJson = await response.json();
-        console.log(responseJson)
+
         const { data: note } = responseJson;
 
         if (!note) {
@@ -115,15 +103,12 @@ class NotesApi {
 
     static async editNoteById(id, newNoteData) {
         try {
-            const existingNote = await NotesApi.getNoteById(id);
+            const {response: responseAdd, responseJson: responseJsonAdd} = await NotesApi.addNote(newNoteData);
+            const { response, responseJson } = await NotesApi.deleteNoteById(id);
 
-            await NotesApi.addNote({
-                ...existingNote,
-                ...newNoteData
-            });
-
-            const { response, responseJson} = await NotesApi.deleteNoteById(id);
-            return { response, responseJson };
+            console.log(responseAdd, responseJsonAdd)
+            console.log( response, responseJson )
+            return { responseAdd, responseJsonAdd, response, responseJson };
         } catch (error) {
             console.error(error);
             alert("Gagal Mengedit Catatan");

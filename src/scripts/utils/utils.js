@@ -394,7 +394,8 @@ class Utils {
                     setTimeout(function () {
                       self.failed(self.instance);
                     }, 15000);
-                  } else {
+                  } 
+                  else {
                     setTimeout(function () {
                       self.hide(self.instance);
                     }, 200);
