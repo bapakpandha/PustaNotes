@@ -18,7 +18,7 @@ class pn_header extends HTMLElement {
     this.adtFunc().updateStyle();
     this.adtFunc().addClassList();
     this._headerElement.innerHTML = `
-        <div class="container-logo-header tautan" data-tautan="index.html"><img class="logo" src="src/img/icon.png"
+        <div class="container-logo-header tautan" data-tautan="index.html"><img class="logo" src="icon.png"
                 alt="">
             <div class="logo_title">Pusta<span>Notes</span></div>
         </div>

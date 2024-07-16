@@ -1,6 +1,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const { write } = require('fs');
 
 module.exports = {
   entry: './src/index.js',
@@ -10,7 +11,6 @@ module.exports = {
   },
   module: {
     rules: [
-      /* style and css loader */
       {
         test: /\.css$/,
         use: [
@@ -41,6 +41,9 @@ module.exports = {
   devServer: {
     client: {
       overlay: false
+    },
+    devMiddleware: {
+      writeToDisk: true
     },
   },
 };
