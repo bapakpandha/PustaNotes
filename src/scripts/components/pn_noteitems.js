@@ -16,7 +16,7 @@ class pn_noteitems extends HTMLElement {
   }
 
   render() {
-    this._ContainerElement.innerHTML = `<div class=container><div class=title><h2>Cari Catatan</h2></div><div id=search><form action=javascript:void(0);><fieldset class=clearfix style=display:flex;flex-direction:row><input type=search value="Cari Catatan disini"name=search onblur='""==this.value&&(this.value="Cari Catatan disini")'onfocus='"Cari Catatan disini"==this.value&&(this.value="")'> <input type=submit value=Search class=button name=search_submit> <input type=submit value=Reset name="reset_submit" class=button></fieldset></form></div><div id="newNoteTrigger" class="title" style="margin:1.8rem auto;"><button id="addNewNote" class="addNewNote">Tambah Catatan Baru</button></div><div class=content></div></div>
+    this._ContainerElement.innerHTML = `<div class=container><div class=title><h2>Cari Catatan</h2></div><div id=search><form action=javascript:void(0);><fieldset class=clearfix style=display:flex;flex-direction:row><input type=search value="Cari Catatan disini"name=search onblur='""==this.value&&(this.value="Cari Catatan disini")'onfocus='"Cari Catatan disini"==this.value&&(this.value="")'> <input type=submit value=Search class=button name=search_submit> <input type=submit value=Reset name="reset_submit" class=button></fieldset></form></div><div id="newNoteTrigger" class="title" style="margin: 1.8rem auto;display: flex;flex-direction: row;justify-content: center;align-items: center;"><button id="addNewNote" class="addNewNote">Tambah Catatan Baru</button><button class="addNewNote" style="width:3rem;min-width:25px;margin:0 1rem;color:#fff" id="refreshNote"><svg width="16px" height="16px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M4.06189 13C4.02104 12.6724 4 12.3387 4 12C4 7.58172 7.58172 4 12 4C14.5006 4 16.7332 5.14727 18.2002 6.94416M19.9381 11C19.979 11.3276 20 11.6613 20 12C20 16.4183 16.4183 20 12 20C9.61061 20 7.46589 18.9525 6 17.2916M9 17H6V17.2916M18.2002 4V6.94416M18.2002 6.94416V6.99993L15.2002 7M6 20V17.2916" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></g></svg></button></div><div class=content></div></div>
            `;
     this.execAdtFunct();
   }
@@ -145,6 +145,9 @@ class pn_noteitems extends HTMLElement {
       const addNoteElement =
         that._ContainerElement.querySelector("#addNewNote");
       addNoteElement.addEventListener("click", addNewNoteHandler);
+      const refreshNoteElement =
+      that._ContainerElement.querySelector("#refreshNote");
+    refreshNoteElement.addEventListener("click", fetchAndDisplayNotes);
     }
 
     function addNewNoteHandler() {
