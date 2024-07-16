@@ -8,6 +8,7 @@ class pn_noteitems extends HTMLElement {
     this._style = document.createElement("style");
     this.appendChild(this._ContainerElement);
     this.GeneralNoteData = {};
+    this.fetchStatus = null;
   }
 
   connectedCallback() {
@@ -59,11 +60,15 @@ class pn_noteitems extends HTMLElement {
       return {js:js}
     }
 
-    function showEmptyContent (element = that._ContainerElement.querySelector("div.content")) {
+    function showEmptyContent (element=that._ContainerElement.querySelector("div.content"), message) {
+      // element = element === undefined ? defaultElement : that._ContainerElement.querySelector("div.content");
+      // message = message === undefined ? defaultMessage : message;
+      if (message) { message = message } else { message = "Tidak Ada Data Yang Ditampilkan. Catatan Kosong."};
       const html = document.createElement("div");
       html.className = "container-Empty";
-      html.innerHTML =`<div class="loader" style="text-align:center;color:#365486;display:flex;flex-direction: column;align-items: center;justify-content: center;"><img src="empty.gif" alt=""><h1>Tidak Ada Data Yang Ditampilkan. Catatan Kosong.</h1></div><style>.container .list_notes div.content {display: block;}</style>`
+      html.innerHTML =`<div class="loader" style="text-align:center;color:#365486;display:flex;flex-direction: column;align-items: center;justify-content: center;"><img src="empty.gif" alt=""><h1>${message}</h1></div><style>.container .list_notes div.content {display: block;}</style>`
       element.innerHTML = "";
+      console.log(element)
       element.appendChild(html);
     }
 
@@ -83,7 +88,7 @@ class pn_noteitems extends HTMLElement {
         const { response_AR, responseJson_AR, error_AR } = await NotesApi.getArchived();
         notes = responseJson?.data;
         archNotes = responseJson_AR?.data;
-        if (error||error_AR) {console.log(error, error_AR)}
+        if (error||error_AR) {console.log(error, error_AR);that.fetchStatus = error}
 
         if(notes && archNotes){
           console.log("true")
@@ -106,12 +111,17 @@ class pn_noteitems extends HTMLElement {
 
     function displayNotes(data) {
       clearContentNotes();
+      if (that.fetchStatus) {
+        showEmptyContent(undefined, "SISTEM API TIDAK MERESPONS. MOHON COBA LAGI NANTI.")
+        return
+      }
       let notesData = tabHandler().filteringDataBasedOnActiveTab(data);
       if (notesData.length<1){
         console.log("empty content");
         showEmptyContent();
         return
       }
+      console.log(notesData);
       notesData
         .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
         .forEach((note) => {
@@ -311,7 +321,14 @@ class pn_noteitems extends HTMLElement {
                 confirmValue.response = response; confirmValue.responseJson = responseJson; confirmValue.error=error;
                 }
                 if (confirmValue.error || !confirmValue.response.ok || (confirmValue.responseJson.status != 'success')) {
-                  confBox.failed(confBox.instance);
+                  if(confirmValue.responseJson) {
+                    if (confirmValue.responseJson.message) {
+                      confBox.failed(confBox.instance, confirmValue.responseJson.message);
+                  } else {
+                      confBox.failed(confBox.instance, "Sistem sedang mengalami gangguan, mohon coba lagi nanti.");}
+                  } else if (confirmValue.error) {
+                    confBox.failed(confBox.instance, confirmValue.error);
+                  } else {confBox.failed(confBox.instance, "Sistem sedang mengalami gangguan, mohon coba lagi nanti.")}                  
                 } else {
                   console.log("sukses edit/tambah")
                   confBox.success(confBox.instance);
@@ -345,6 +362,8 @@ class pn_noteitems extends HTMLElement {
     function generalSearchHandler() {
       // that = that;
       function handleSearch(searchString) {
+        if (Object.keys(that.GeneralNoteData).length<1){return}
+
         let jsonDataString = that.GeneralNoteData;
         let filteredNotesName = jsonDataString.filter(
           (note) =>
@@ -453,9 +472,17 @@ class pn_noteitems extends HTMLElement {
                 respon["response"] = response; respon["responseJson"] = responseJson; respon["error"] = error;
               } else { console.log("bukan hapus bukan arsip") }
               if (respon.error || !respon.response.ok || (respon.responseJson.status != 'success')) {
-                confBox.failed(confBox.instance);
-                console.error(`Sedang Gangguan: ${respon.responseJson.status} : ${respon.responseJson.message}`);
-                console.error(respon.response.error);
+                if (respon.responseJson.message) {
+                  console.error(`Error servernya: ${respon.responseJson.message}`);
+                  confBox.failed(confBox.instance, respon.responseJson.message);
+                } else if (respon.error) {
+                  console.error(`Sedang Gangguan: ${respon.error}`);
+                  confBox.failed(confBox.instance, respon.error);
+                } else {
+                  console.error(`Sedang Gangguan: Error Tidak Diketahui`);
+                  confBox.failed(confBox.instance, "Sistem sedang Error. Coba Lagi Nanti.");
+                }
+                
               } else {
                 confBox.success(confBox.instance);
                 that.adtFunct().fetchAndDisplayNotes();
@@ -529,7 +556,7 @@ class pn_noteitems extends HTMLElement {
             buttonArchive.className = "unarsipkan"
           });
           
-          newNote.style.display = "none";
+          // newNote.style.display = "none";
         } else {
           console.log("tabCOntentKosong")
         }

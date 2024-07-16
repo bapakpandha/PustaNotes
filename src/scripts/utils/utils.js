@@ -285,6 +285,7 @@ class Utils {
       init: function () {
         this.instance = null;
         this.parent_ = null;
+        this.status = null;
         this.create();
         this.layout();
         this.styling();
@@ -334,20 +335,23 @@ class Utils {
       show: function (element) {
         element.style.display = "flex";
         element.style.opacity = 1;
+        this.status = "show";
       },
       hide: function (element) {
         element.style.opacity = 0;
         setTimeout(() => {
           this.parent_.remove();
         }, 1000);
+        this.status = "hide";
       },
       success: function (element) {
         console.log("success dieksekusi")
         var element_success = `<div id='confirm-box'><svg class='checkmark' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 52 52' style='margin: 1rem;'><circle class='checkmark__circle2' cx='26' cy='26' r='30' fill='none'></circle><circle class='checkmark__circle' cx='26' cy='26' r='25' fill='none'></circle><path class='checkmark__check' fill='none' d='M14.1 27.2l7.1 7.2 16.7-16.8'></path></svg><h2 id='confirm-header-title' style='font-size: 1.5rem;margin: 1rem;'>${this.successValue}</h2><div id='confirm-buttons'><button id='confirm-ok'>OK</button></div></div>`;
         element.innerHTML = element_success;
         element.style.opacity = 1;
+        this.status = "success";
         const confirmButton = element.querySelector("#confirm-ok");
-        confirmButton.addEventListener(('click'), () => { setTimeout(() => {this.hide(element);}, 500); });
+        confirmButton.addEventListener(('click'), () => { setTimeout(() => { this.hide(element); }, 500); });
       },
       loading(element) {
         const loadingHtml = `
@@ -358,11 +362,15 @@ class Utils {
               <style>.wait:after{content:' .';animation:2s steps(7,end) infinite dots}@keyframes dots{0%,20%{color:transparent;text-shadow:.25em 0 0 transparent,.5em 0 0 transparent}40%{color:#fff;text-shadow:.25em 0 0 transparent,.5em 0 0 transparent}60%{text-shadow:.25em 0 0 #fff,.5em 0 0 transparent}100%,80%{text-shadow:.25em 0 0 #fff,.5em 0 0 #fff}}</style>`;
         element.innerHTML = loadingHtml;
         element.style.opacity = 1;
+        this.status = "loading";
         setTimeout(() => {
-        this.failed(element);
+          if (this.status == "loading") {
+            this.failed(element);
+          }
         }, 15000);
       },
-      failed(element) {
+      failed(element, rincian) {
+        rincian = rincian || false;
         const failedHtml = `
               <div id='confirm-box'>
                   <div style="position: relative;width: 150px;height: 150px;">
@@ -385,8 +393,25 @@ class Utils {
               </div>`;
         element.innerHTML = failedHtml;
         element.style.opacity = 1;
+        this.status = "failed";
+        if (rincian) {
+          let that = this;
+          console.log(rincian);
+          const html_rincian = `<div id="rincian-buttons" style="width:100%;text-align:center;bottom:0;left:0;padding-bottom:1em"><button id="confirm-ok" style="display:inline-block;background:0 0;color:#fff;font-family:Lato,Arial,sans-serif;font-weight:400;cursor:pointer;text-transform:uppercase;border:2px solid;margin:0 1em;padding:.6em 0;width:150px;border-radius:1rem">Lihat Rincian</button></div>`;
+          const divRincian = document.createElement("div");
+          divRincian.innerHTML = html_rincian;
+          const confirmBox= element.querySelector('#confirm-box');
+          confirmBox.appendChild(divRincian);
+          const rincianButton = divRincian.querySelector("#rincian-buttons");
+          rincianButton.addEventListener(('click'), () => {showRincian()})
+          function showRincian() {
+            element.innerHTML = `<div id='confirm-box'><h2 id="confirm-header-title">Error<h2><h2 id="confirm-header">${rincian}</h2><div id="confirm-buttons"><button id="confirm-ok-rincian">Ok</button></div></div>`
+            const confirmButtonRincian = element.querySelector("#confirm-ok-rincian");
+            confirmButtonRincian.addEventListener(('click'), () => { setTimeout(() => { that.hide(element); }, 100); });
+          }
+      }
         const confirmButton = element.querySelector("#confirm-ok");
-        confirmButton.addEventListener(('click'), () => { setTimeout(() => {this.hide(element);}, 500); });
+        confirmButton.addEventListener(('click'), () => { setTimeout(() => { this.hide(element); }, 500); });
 
       },
       actions: function () {
