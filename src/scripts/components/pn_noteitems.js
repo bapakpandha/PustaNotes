@@ -59,6 +59,14 @@ class pn_noteitems extends HTMLElement {
       return {js:js}
     }
 
+    function showEmptyContent (element = that._ContainerElement.querySelector("div.content")) {
+      const html = document.createElement("div");
+      html.className = "container-Empty";
+      html.innerHTML =`<div class="loader" style="text-align:center;color:#365486;display:flex;flex-direction: column;align-items: center;justify-content: center;"><img src="empty.gif" alt=""><h1>Tidak Ada Data Yang Ditampilkan. Catatan Kosong.</h1></div><style>.container .list_notes div.content {display: block;}</style>`
+      element.innerHTML = "";
+      element.appendChild(html);
+    }
+
     function clearContentNotes() {
       const content_element =
         that._ContainerElement.querySelector("div.content");
@@ -97,9 +105,13 @@ class pn_noteitems extends HTMLElement {
     };
 
     function displayNotes(data) {
-      if (Object.keys(that.GeneralNoteData).length<1){return}
       clearContentNotes();
-      let notesData = tabHandler().filteringDataBasedOnActiveTab(data)
+      let notesData = tabHandler().filteringDataBasedOnActiveTab(data);
+      if (notesData.length<1){
+        console.log("empty content");
+        showEmptyContent();
+        return
+      }
       notesData
         .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
         .forEach((note) => {
@@ -501,6 +513,8 @@ class pn_noteitems extends HTMLElement {
           } else {
             return notes_data;
           }
+        } else {
+          return notes_data;
         }
       }
 
