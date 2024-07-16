@@ -9,6 +9,7 @@ class NotesApi {
             const responseJson = await response.json();
             return { response, responseJson };
         } catch (error) {
+            console.log(error)
             return { error };
         }
 

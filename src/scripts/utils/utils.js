@@ -284,12 +284,16 @@ class Utils {
     ConfirmBox.prototype = {
       init: function () {
         this.instance = null;
+        this.parent_ = null;
         this.create();
         this.layout();
+        this.styling();
         this.actions();
       },
       create: function () {
         if (document.querySelector("#confirm-wrapper") === null) {
+          const parent_ = document.createElement("div")
+          parent_.id = "confirm-parent";
           var wrapper = document.createElement("div");
           wrapper.id = "confirm-wrapper";
           var html =
@@ -302,9 +306,11 @@ class Utils {
           }
           html += "</div>";
           wrapper.innerHTML = html;
-          document.body.appendChild(wrapper);
+          parent_.appendChild(wrapper);
+          this.element.appendChild(parent_);
         }
         this.instance = document.querySelector("#confirm-wrapper");
+        this.parent_ = document.querySelector("#confirm-parent");
       },
       layout: function () {
         var wrapper = this.instance;
@@ -314,23 +320,34 @@ class Utils {
           document.body.clientHeight;
         wrapper.style.height = winHeight + "px";
       },
+
+      styling: function () {
+        let styleGeneral = document.createElement("style");
+        let stylesGeneral =
+          `
+        #confirm-wrapper{width:100%;position:fixed;top:0;left:0;z-index:1000000;background:rgba(204,204,204,.6);display:none;transition:opacity .5s ease-in;height:1378px;display:flex;opacity:1;flex-direction:column;flex-wrap:nowrap;align-content:center;justify-content:center;align-items:center}#confirm-box{width:350px;background:var(--third-color);min-height:200px;border:3px solid var(--fourth-color);border-radius:1rem;COLOR:white;display:flex;flex-direction:column;align-content:center;flex-wrap:nowrap;align-items:center;justify-content:center;padding:0 1rem}#confirm-buttons{width:100%;text-align:center;bottom:0;left:0;padding-bottom:1em}#confirm-buttons button{display:inline-block;background:0 0;color:#fff;font-size:1em;font-family:Lato,Arial,sans-serif;font-weight:700;cursor:pointer;text-transform:uppercase;border:2px solid;margin:0 1em;padding:.6em 0;width:120px;border-radius:1rem}#confirm-header{text-align:center;font-size:1em;font-weight:400;text-transform:none;margin:2.5em 0 1.5em}#confirm-header:after{content:' ';display:block;width:1em;margin:.4em auto}#confirm-header-title{text-align:center;font-size:1rem;margin:1rem 0 0}.checkmark{width:100px;height:100px;border-radius:50%;display:block;stroke-width:2;stroke:white;stroke-miterlimit:10;box-shadow:inset 0 0 0 var(--third-color);animation:.4s ease-in-out .4s forwards fill,.3s ease-in-out .9s both scale;position:relative;top:5px;margin:0 auto}.checkmark__circle{stroke-dasharray:166;stroke-dashoffset:166;stroke-width:2px;stroke-miterlimit:10;stroke:white;fill:var(--third-color);animation:.6s cubic-bezier(.65,0,.45,1) forwards stroke}circle.checkmark__circle2{stroke-dasharray:195;stroke-dashoffset:195;stroke-width:10px;stroke-miterlimit:6}.checkmark__check{transform-origin:50% 50%;stroke-dasharray:48;stroke-dashoffset:48;animation:.3s cubic-bezier(.65,0,.45,1) .8s forwards stroke}@keyframes stroke{100%{stroke-dashoffset:0}}.red-stroke{stroke:hsl(9,100%,50%)}.circular circle.path,.cross{stroke-linecap:round;opacity:1}.circular circle.path{stroke-dasharray:330;stroke-dashoffset:0;animation:1.5s ease-out draw-circle}@keyframes draw-circle{0%{stroke-dasharray:0,330;stroke-dashoffset:0;opacity:1}80%{stroke-dasharray:330,330;stroke-dashoffset:0;opacity:.4}100%{opacity:1}}.cross{stroke-width:10;position:absolute;top:54px;left:54px;width:40px;height:40px}.cross .first-line{animation:1.5s ease-out draw-first-line}.cross .second-line{animation:1.5s ease-out draw-second-line}@keyframes draw-first-line{0%{stroke-dasharray:0,56;stroke-dashoffset:1;opacity:1}50%{stroke-dasharray:0,0;stroke-dashoffset:1}80%{opacity:.4}100%{stroke-dasharray:56,0;stroke-dashoffset:70;opacity:1}}@keyframes draw-second-line{0%{stroke-dasharray:0,55;stroke-dashoffset:1;opacity:1}50%{stroke-dasharray:0,0;stroke-dashoffset:1}80%{opacity:.4}100%{stroke-dasharray:55,0;stroke-dashoffset:70;opacity:1}}
+        `;
+        styleGeneral.textContent = stylesGeneral;
+        this.parent_.appendChild(styleGeneral);
+      },
+
       show: function (element) {
         element.style.display = "flex";
         element.style.opacity = 1;
       },
       hide: function (element) {
         element.style.opacity = 0;
-        setTimeout(function () {
-          element.remove();
+        setTimeout(() => {
+          this.parent_.remove();
         }, 1000);
       },
       success: function (element) {
+        console.log("success dieksekusi")
         var element_success = `<div id='confirm-box'><svg class='checkmark' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 52 52' style='margin: 1rem;'><circle class='checkmark__circle2' cx='26' cy='26' r='30' fill='none'></circle><circle class='checkmark__circle' cx='26' cy='26' r='25' fill='none'></circle><path class='checkmark__check' fill='none' d='M14.1 27.2l7.1 7.2 16.7-16.8'></path></svg><h2 id='confirm-header-title' style='font-size: 1.5rem;margin: 1rem;'>${this.successValue}</h2><div id='confirm-buttons'><button id='confirm-ok'>OK</button></div></div>`;
         element.innerHTML = element_success;
         element.style.opacity = 1;
-        setTimeout(function () {
-          element.remove();
-        }, 2000);
+        const confirmButton = element.querySelector("#confirm-ok");
+        confirmButton.addEventListener(('click'), () => { setTimeout(() => {this.hide(element);}, 500); });
       },
       loading(element) {
         const loadingHtml = `
@@ -341,18 +358,36 @@ class Utils {
               <style>.wait:after{content:' .';animation:2s steps(7,end) infinite dots}@keyframes dots{0%,20%{color:transparent;text-shadow:.25em 0 0 transparent,.5em 0 0 transparent}40%{color:#fff;text-shadow:.25em 0 0 transparent,.5em 0 0 transparent}60%{text-shadow:.25em 0 0 #fff,.5em 0 0 transparent}100%,80%{text-shadow:.25em 0 0 #fff,.5em 0 0 #fff}}</style>`;
         element.innerHTML = loadingHtml;
         element.style.opacity = 1;
+        setTimeout(() => {
+        this.failed(element);
+        }, 15000);
       },
       failed(element) {
         const failedHtml = `
               <div id='confirm-box'>
-                  <h2 id='confirm-header-title'>${this.failedValue}</h2>
+                  <div style="position: relative;width: 150px;height: 150px;">
+                      <svg class="circular red-stroke">
+                          <circle class="path" cx="75" cy="75" r="50" fill="none" stroke-width="10" stroke-miterlimit="10" />
+                      </svg>
+                      <svg class="cross red-stroke">
+                          <g transform="matrix(0.79961,8.65821e-32,8.39584e-32,0.79961,-502.652,-204.518)">
+                              <path class="first-line" d="M634.087,300.805L673.361,261.53" fill="none" />
+                          </g>
+                          <g transform="matrix(-1.28587e-16,-0.79961,0.79961,-1.28587e-16,-204.752,543.031)">
+                              <path class="second-line" d="M634.087,300.805L673.361,261.53" />
+                          </g>
+                      </svg>
+                  </div>
+                  <h2 id='confirm-header-title' style="margin:1rem auto;">${this.failedValue}</h2>
                   <div id='confirm-buttons'>
                       <button id='confirm-ok'>OK</button>
                   </div>
               </div>`;
         element.innerHTML = failedHtml;
         element.style.opacity = 1;
-        setTimeout(() => element.remove(), 2000);
+        const confirmButton = element.querySelector("#confirm-ok");
+        confirmButton.addEventListener(('click'), () => { setTimeout(() => {this.hide(element);}, 500); });
+
       },
       actions: function () {
         var self = this;
@@ -391,10 +426,7 @@ class Utils {
                       result = await execute_promise;
                     }
                     showSuccess_s();
-                    setTimeout(function () {
-                      self.failed(self.instance);
-                    }, 15000);
-                  } 
+                  }
                   else {
                     setTimeout(function () {
                       self.hide(self.instance);

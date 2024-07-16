@@ -29,7 +29,6 @@ class pn_noteitems extends HTMLElement {
 
     function showLoadingContent (element = that._ContainerElement.querySelector("div.content")) {
       element.innerHTML = "";
-      console.log(element);
       const html = document.createElement("div");
       html.className = "container-loader";
       html.innerHTML =`<div class="loader"></div><div class="loader_"></div><div id="loader-text" class="loader-text"></div>`
@@ -41,7 +40,6 @@ class pn_noteitems extends HTMLElement {
       js();
 
       function js() {
-        console.log(element)
         const text = "Pustanotes sedang memuat";
         const loaderText = element.querySelector("#loader-text");
         const wordsContainer = document.createElement("div");
@@ -55,7 +53,6 @@ class pn_noteitems extends HTMLElement {
         const span = document.createElement("span");
         span.className = "wait";
         wordsContainer.appendChild(span);
-        console.log(loaderText)
         loaderText.appendChild(wordsContainer);
       }
       
@@ -78,6 +75,7 @@ class pn_noteitems extends HTMLElement {
         const { response_AR, responseJson_AR, error_AR } = await NotesApi.getArchived();
         notes = responseJson?.data;
         archNotes = responseJson_AR?.data;
+        if (error||error_AR) {console.log(error, error_AR)}
 
         if(notes && archNotes){
           console.log("true")
@@ -288,7 +286,7 @@ class pn_noteitems extends HTMLElement {
           console.log(confirmValue)
           console.log(edit)
           var confBox = new ConfirmBox(
-            modal,
+            document.body,
             {
               ok: async function () {
                 if (edit==true){
@@ -303,6 +301,7 @@ class pn_noteitems extends HTMLElement {
                 if (confirmValue.error || !confirmValue.response.ok || (confirmValue.responseJson.status != 'success')) {
                   confBox.failed(confBox.instance);
                 } else {
+                  console.log("sukses edit/tambah")
                   confBox.success(confBox.instance);
                   hideModal();
                   that.adtFunct().fetchAndDisplayNotes();
@@ -333,7 +332,6 @@ class pn_noteitems extends HTMLElement {
 
     function generalSearchHandler() {
       // that = that;
-      if (Object.keys(that.GeneralNoteData).length<1){return}
       function handleSearch(searchString) {
         let jsonDataString = that.GeneralNoteData;
         let filteredNotesName = jsonDataString.filter(
