@@ -9,7 +9,7 @@ class pn_noteitems extends HTMLElement {
     this.appendChild(this._ContainerElement);
     this.GeneralNoteData = {};
     this.fetchStatus = null;
-    window.addEventListener("resize", () => {this.adtFunct().njajal();console.log("njajal")});
+    window.addEventListener("resize", () => { this.adtFunct().njajal(); console.log("njajal") });
   }
 
   connectedCallback() {
@@ -126,6 +126,7 @@ class pn_noteitems extends HTMLElement {
         .forEach((note) => {
           const noteElement = document.createElement("pn-noteitem");
           noteElement.setAttribute("data-idNote", note.id);
+          noteElement.classList.add("reveal")
           noteElement.innerHTML = `
 
                     <span slot="title">${note.title}</span>
@@ -140,16 +141,7 @@ class pn_noteitems extends HTMLElement {
       tabHandler().changeButtonWhenChangeTab();
       categorizingHandler().addListenerButtonArchive();
       njajal();
-      function scroll_reveal_start() {
-        ScrollReveal({ reset: true });
-        ScrollReveal().reveal('pn-noteitem', {
-            duration: 3000,
-            origin: "top",
-            distance: "3rem",
-            easing: "cubic-bezier(0.5, 0, 0, 1)"
-        });
-      scroll_reveal_start();
-    }
+
     }
 
     function listenAddNoteButton() {
@@ -314,10 +306,10 @@ class pn_noteitems extends HTMLElement {
           };
           let confirmValue = {};
           if (edit == true) {
-            confirmValue.title = ["Perbarui Catatan?"]; confirmValue.body = [`Apakah Anda Yakin ingin menyimpan Perubahan pada catatan berjudul "${Utils.truncateText(title,100)}"?`];
+            confirmValue.title = ["Perbarui Catatan?"]; confirmValue.body = [`Apakah Anda Yakin ingin menyimpan Perubahan pada catatan berjudul "${Utils.truncateText(title, 100)}"?`];
             confirmValue.ok = "Simpan"; confirmValue.success = "Sukses Memperbarui Catatan"; confirmValue.loading = "Memperbarui Catatan"; confirmValue.failed = "Gagal Memperbarui catatan!"
           } else {
-            confirmValue.title = [`Tambahkan Catatan?`]; confirmValue.body = [`Apakah Anda yakin ingin menambahkan catatan berjudul "${Utils.truncateText(title,100)}" ke dalam Daftar Catatan?`]; confirmValue.ok = "Tambahkan"; confirmValue.success = "Sukses Menambahkan Catatan"; confirmValue.loading = "Sedang Menambahkan"; confirmValue.failed = "Gagal Menambahkan"
+            confirmValue.title = [`Tambahkan Catatan?`]; confirmValue.body = [`Apakah Anda yakin ingin menambahkan catatan berjudul "${Utils.truncateText(title, 100)}" ke dalam Daftar Catatan?`]; confirmValue.ok = "Tambahkan"; confirmValue.success = "Sukses Menambahkan Catatan"; confirmValue.loading = "Sedang Menambahkan"; confirmValue.failed = "Gagal Menambahkan"
           }
           var ConfirmBox = Utils.generalConfirmDialogBuilder();
           console.log(confirmValue)
@@ -466,11 +458,11 @@ class pn_noteitems extends HTMLElement {
       function confirmTrigger(note_id, note_title = "", action) {
         let respon = {};
         if (action == "arsipkan") {
-          respon["title"] = ["Arsipkan Catatan?", "Yakin?"]; respon["body"] = [`Apakah anda yakin ingin mengarsipkan catatan dengan judul: ${Utils.truncateText(note_title,100)}`, "Apakah Anda Yakin?"]; respon["ok"] = "Arsipkan"; respon["success"] = "Sukses Mengarsipkan"; respon["loading"] = "Sedang Mengarsipkan"; respon["failed"] = "Gagal Mengarsipkan!";
+          respon["title"] = ["Arsipkan Catatan?", "Yakin?"]; respon["body"] = [`Apakah anda yakin ingin mengarsipkan catatan dengan judul: ${Utils.truncateText(note_title, 100)}`, "Apakah Anda Yakin?"]; respon["ok"] = "Arsipkan"; respon["success"] = "Sukses Mengarsipkan"; respon["loading"] = "Sedang Mengarsipkan"; respon["failed"] = "Gagal Mengarsipkan!";
         } else if (action == "unarsipkan") {
-          respon["title"] = ["Unarsipkan Catatan?", "Yakin?"]; respon["body"] = [`Apakah anda yakin ingin membatalkan pengarsipan catatan dengan judul: ${Utils.truncateText(note_title,100)}`, "Apakah Anda Yakin?"]; respon["ok"] = "Unarsipkan"; respon["success"] = "Sukses Membatalkan Arsip"; respon["loading"] = "Sedang Meng-unarsipkan"; respon["failed"] = "Gagal Meng-unarsipkan!";
+          respon["title"] = ["Unarsipkan Catatan?", "Yakin?"]; respon["body"] = [`Apakah anda yakin ingin membatalkan pengarsipan catatan dengan judul: ${Utils.truncateText(note_title, 100)}`, "Apakah Anda Yakin?"]; respon["ok"] = "Unarsipkan"; respon["success"] = "Sukses Membatalkan Arsip"; respon["loading"] = "Sedang Meng-unarsipkan"; respon["failed"] = "Gagal Meng-unarsipkan!";
         } else if (action == "hapus") {
-          respon["title"] = ["Hapus Catatan?", "Yakin?"]; respon["body"] = [`Apakah anda yakin ingin menghapus catatan dengan judul: ${Utils.truncateText(note_title,100)}`, "Apakah Anda Yakin?"]; respon["ok"] = "Hapus"; respon["success"] = "Sukses Dihapus"; respon["loading"] = "Sedang Menghapus"; respon["failed"] = "Gagal Menghapus!";
+          respon["title"] = ["Hapus Catatan?", "Yakin?"]; respon["body"] = [`Apakah anda yakin ingin menghapus catatan dengan judul: ${Utils.truncateText(note_title, 100)}`, "Apakah Anda Yakin?"]; respon["ok"] = "Hapus"; respon["success"] = "Sukses Dihapus"; respon["loading"] = "Sedang Menghapus"; respon["failed"] = "Gagal Menghapus!";
         } else { return }
         var ConfirmBox = Utils.generalConfirmDialogBuilder();
         var confBox = new ConfirmBox(
@@ -601,12 +593,43 @@ class pn_noteitems extends HTMLElement {
 
         if (note) {
           if (spanElement) {
-              spanElement.textContent = Utils.truncateText(note.body, maxLength);
+            spanElement.textContent = Utils.truncateText(note.body, maxLength);
           }
-      }
-      })
-    }
+        }
+      });
 
+      function scroll_Reveal() {
+        function scrollTrigger(parent = document, selector, options = {}) {
+          let els = parent.querySelectorAll(selector)
+          els = Array.from(els)
+          els.forEach(el => {
+            addObserver(el, options)
+          })
+        }
+
+        function addObserver(el, options) {
+          let observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+              if (entry.isIntersecting) {
+                if (options.cb) {
+
+                  options.cb(el)
+                } else {
+                  entry.target.classList.add('revealOn')
+                }
+              } else {
+                entry.target.classList.remove('revealOn');
+              }
+            })
+          }, options)
+          observer.observe(el)
+        }
+        scrollTrigger(that._ContainerElement, '.reveal', {
+          rootMargin: '-200px',
+        })
+      }
+      scroll_Reveal();
+    }
     return {
       addClassList: addClassList,
       displayNotes: displayNotes,
@@ -618,7 +641,7 @@ class pn_noteitems extends HTMLElement {
       tabHandler: tabHandler,
       fetchAndDisplayNotes: fetchAndDisplayNotes,
       showLoadingContent: showLoadingContent,
-      njajal:njajal,
+      njajal: njajal,
     };
   }
 
