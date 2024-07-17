@@ -62,8 +62,6 @@ class pn_noteitems extends HTMLElement {
     }
 
     function showEmptyContent(element = that._ContainerElement.querySelector("div.content"), message) {
-      // element = element === undefined ? defaultElement : that._ContainerElement.querySelector("div.content");
-      // message = message === undefined ? defaultMessage : message;
       if (message) { message = message } else { message = "Tidak Ada Data Yang Ditampilkan. Catatan Kosong." };
       const html = document.createElement("div");
       html.className = "container-Empty";
@@ -306,10 +304,10 @@ class pn_noteitems extends HTMLElement {
           };
           let confirmValue = {};
           if (edit == true) {
-            confirmValue.title = ["Perbarui Catatan?"]; confirmValue.body = [`Apakah Anda Yakin ingin menyimpan Perubahan pada catatan berjudul "${title}"?`];
+            confirmValue.title = ["Perbarui Catatan?"]; confirmValue.body = [`Apakah Anda Yakin ingin menyimpan Perubahan pada catatan berjudul "${Utils.truncateText(title,100)}"?`];
             confirmValue.ok = "Simpan"; confirmValue.success = "Sukses Memperbarui Catatan"; confirmValue.loading = "Memperbarui Catatan"; confirmValue.failed = "Gagal Memperbarui catatan!"
           } else {
-            confirmValue.title = [`Tambahkan Catatan?`]; confirmValue.body = [`Apakah Anda yakin ingin menambahkan catatan berjudul "${title}" ke dalam Daftar Catatan?`]; confirmValue.ok = "Tambahkan"; confirmValue.success = "Sukses Menambahkan Catatan"; confirmValue.loading = "Sedang Menambahkan"; confirmValue.failed = "Gagal Menambahkan"
+            confirmValue.title = [`Tambahkan Catatan?`]; confirmValue.body = [`Apakah Anda yakin ingin menambahkan catatan berjudul "${Utils.truncateText(title,100)}" ke dalam Daftar Catatan?`]; confirmValue.ok = "Tambahkan"; confirmValue.success = "Sukses Menambahkan Catatan"; confirmValue.loading = "Sedang Menambahkan"; confirmValue.failed = "Gagal Menambahkan"
           }
           var ConfirmBox = Utils.generalConfirmDialogBuilder();
           console.log(confirmValue)
@@ -458,11 +456,11 @@ class pn_noteitems extends HTMLElement {
       function confirmTrigger(note_id, note_title = "", action) {
         let respon = {};
         if (action == "arsipkan") {
-          respon["title"] = ["Arsipkan Catatan?", "Yakin?"]; respon["body"] = [`Apakah anda yakin ingin mengarsipkan catatan dengan judul: ${note_title}`, "Apakah Anda Yakin?"]; respon["ok"] = "Arsipkan"; respon["success"] = "Sukses Mengarsipkan"; respon["loading"] = "Sedang Mengarsipkan"; respon["failed"] = "Gagal Mengarsipkan!";
+          respon["title"] = ["Arsipkan Catatan?", "Yakin?"]; respon["body"] = [`Apakah anda yakin ingin mengarsipkan catatan dengan judul: ${Utils.truncateText(note_title,100)}`, "Apakah Anda Yakin?"]; respon["ok"] = "Arsipkan"; respon["success"] = "Sukses Mengarsipkan"; respon["loading"] = "Sedang Mengarsipkan"; respon["failed"] = "Gagal Mengarsipkan!";
         } else if (action == "unarsipkan") {
-          respon["title"] = ["Unarsipkan Catatan?", "Yakin?"]; respon["body"] = [`Apakah anda yakin ingin membatalkan pengarsipan catatan dengan judul: ${note_title}`, "Apakah Anda Yakin?"]; respon["ok"] = "Unarsipkan"; respon["success"] = "Sukses Membatalkan Arsip"; respon["loading"] = "Sedang Meng-unarsipkan"; respon["failed"] = "Gagal Meng-unarsipkan!";
+          respon["title"] = ["Unarsipkan Catatan?", "Yakin?"]; respon["body"] = [`Apakah anda yakin ingin membatalkan pengarsipan catatan dengan judul: ${Utils.truncateText(note_title,100)}`, "Apakah Anda Yakin?"]; respon["ok"] = "Unarsipkan"; respon["success"] = "Sukses Membatalkan Arsip"; respon["loading"] = "Sedang Meng-unarsipkan"; respon["failed"] = "Gagal Meng-unarsipkan!";
         } else if (action == "hapus") {
-          respon["title"] = ["Hapus Catatan?", "Yakin?"]; respon["body"] = [`Apakah anda yakin ingin menghapus catatan dengan judul: ${note_title}`, "Apakah Anda Yakin?"]; respon["ok"] = "Hapus"; respon["success"] = "Sukses Dihapus"; respon["loading"] = "Sedang Menghapus"; respon["failed"] = "Gagal Menghapus!";
+          respon["title"] = ["Hapus Catatan?", "Yakin?"]; respon["body"] = [`Apakah anda yakin ingin menghapus catatan dengan judul: ${Utils.truncateText(note_title,100)}`, "Apakah Anda Yakin?"]; respon["ok"] = "Hapus"; respon["success"] = "Sukses Dihapus"; respon["loading"] = "Sedang Menghapus"; respon["failed"] = "Gagal Menghapus!";
         } else { return }
         var ConfirmBox = Utils.generalConfirmDialogBuilder();
         var confBox = new ConfirmBox(
@@ -580,12 +578,7 @@ class pn_noteitems extends HTMLElement {
 
     function njajal() {
       let elements = document.querySelector("pn-notes-wrapper").shadowRoot.querySelector("pn-noteitems").querySelectorAll("pn-noteitem");
-      function truncateText(text, maxLength) {
-        if (text.length > maxLength) {
-            return text.slice(0, maxLength) + '...';
-        }
-        return text;
-    }
+
       elements.forEach(noteitemElement => {
         const id = noteitemElement.getAttribute("data-idnote");
         let offsetWidth = noteitemElement.offsetWidth;
@@ -598,7 +591,7 @@ class pn_noteitems extends HTMLElement {
 
         if (note) {
           if (spanElement) {
-              spanElement.textContent = truncateText(note.body, maxLength);
+              spanElement.textContent = Utils.truncateText(note.body, maxLength);
           }
       }
       })

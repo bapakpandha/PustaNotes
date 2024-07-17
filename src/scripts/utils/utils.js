@@ -400,16 +400,16 @@ class Utils {
           const html_rincian = `<div id="rincian-buttons" style="width:100%;text-align:center;bottom:0;left:0;padding-bottom:1em"><button id="confirm-ok" style="display:inline-block;background:0 0;color:#fff;font-family:Lato,Arial,sans-serif;font-weight:400;cursor:pointer;text-transform:uppercase;border:2px solid;margin:0 1em;padding:.6em 0;width:150px;border-radius:1rem">Lihat Rincian</button></div>`;
           const divRincian = document.createElement("div");
           divRincian.innerHTML = html_rincian;
-          const confirmBox= element.querySelector('#confirm-box');
+          const confirmBox = element.querySelector('#confirm-box');
           confirmBox.appendChild(divRincian);
           const rincianButton = divRincian.querySelector("#rincian-buttons");
-          rincianButton.addEventListener(('click'), () => {showRincian()})
+          rincianButton.addEventListener(('click'), () => { showRincian() })
           function showRincian() {
             element.innerHTML = `<div id='confirm-box'><h2 id="confirm-header-title">Error<h2><h2 id="confirm-header">${rincian}</h2><div id="confirm-buttons"><button id="confirm-ok-rincian">Ok</button></div></div>`
             const confirmButtonRincian = element.querySelector("#confirm-ok-rincian");
             confirmButtonRincian.addEventListener(('click'), () => { setTimeout(() => { that.hide(element); }, 100); });
           }
-      }
+        }
         const confirmButton = element.querySelector("#confirm-ok");
         confirmButton.addEventListener(('click'), () => { setTimeout(() => { this.hide(element); }, 500); });
 
@@ -554,5 +554,13 @@ class Utils {
 
     return `${day} ${month} ${year} ${hours}.${minutes} WIB`;
   }
+
+  static truncateText(text, maxLength) {
+    if (text.length > maxLength) {
+      return text.slice(0, maxLength) + '...';
+    }
+    return text;
+  }
+  
 }
 export default Utils;
