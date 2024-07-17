@@ -27,6 +27,28 @@
                 </svg>
             </div>
 
+
+            <div class="content">
+                <pn-noteitem data-idnote="notes-pJ-bksOpJFZn-2fW">
+                    #shadow-root (open)
+                        <div class="note">
+                            <div class="body">
+                                <slot name="body">
+                                    <span> reveal
+                                </slot>
+                            </div>
+                        </div>
+                    <span slot="title">Kalau Note Teksnya Banyak</span>
+                    <span slot="body">Gimana cara overflow Hiddennya kalo span teks ada di dalam shadow DOM?</span>
+                    <span slot="createdAt">17 Jul 2024 13.38 WIB</span>
+                </pn-noteitem>
+            </div>
+
+            <div><span slot="title">${note.title}</span></div>
+            <div><span slot="body">${note.body}</span></div>
+            <div><span slot="createdAt">${Utils.formatDateToReadable(note.createdAt)}</span></div>
+
+
         </div>
         <style>
             .container {
@@ -414,100 +436,99 @@
         }
 
         .red-stroke {
-                stroke: hsl(9, 100%, 50%);
-            }
+            stroke: hsl(9, 100%, 50%);
+        }
 
-            .circular circle.path {
-                stroke-dasharray: 330;
+        .circular circle.path {
+            stroke-dasharray: 330;
+            stroke-dashoffset: 0;
+            stroke-linecap: round;
+            opacity: 1;
+            animation: 1.5s draw-circle ease-out;
+        }
+
+        @keyframes draw-circle {
+            0% {
+                stroke-dasharray: 0, 330;
                 stroke-dashoffset: 0;
-                stroke-linecap: round;
-                opacity: 1;
-                animation: 1.5s draw-circle ease-out;
-            }
-
-            @keyframes draw-circle {
-                0% {
-                    stroke-dasharray: 0, 330;
-                    stroke-dashoffset: 0;
-                    opacity: 1;
-                }
-
-                80% {
-                    stroke-dasharray: 330, 330;
-                    stroke-dashoffset: 0;
-                    opacity: 0.4;
-                }
-
-                100% {
-                    opacity: 1;
-                }
-            }
-
-            .cross {
-                stroke-width: 10;
-                stroke-linecap: round;
-                position: absolute;
-                top: 54px;
-                left: 54px;
-                width: 40px;
-                height: 40px;
                 opacity: 1;
             }
 
-            .cross .first-line {
-                animation: 1.5s draw-first-line ease-out;
+            80% {
+                stroke-dasharray: 330, 330;
+                stroke-dashoffset: 0;
+                opacity: 0.4;
             }
 
-            .cross .second-line {
-                animation: 1.5s draw-second-line ease-out;
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .cross {
+            stroke-width: 10;
+            stroke-linecap: round;
+            position: absolute;
+            top: 54px;
+            left: 54px;
+            width: 40px;
+            height: 40px;
+            opacity: 1;
+        }
+
+        .cross .first-line {
+            animation: 1.5s draw-first-line ease-out;
+        }
+
+        .cross .second-line {
+            animation: 1.5s draw-second-line ease-out;
+        }
+
+        @keyframes draw-first-line {
+            0% {
+                stroke-dasharray: 0, 56;
+                stroke-dashoffset: 1;
+                opacity: 1;
             }
 
-            @keyframes draw-first-line {
-                0% {
-                    stroke-dasharray: 0, 56;
-                    stroke-dashoffset: 1;
-                    opacity: 1;
-                }
-
-                50% {
-                    stroke-dasharray: 0, 0;
-                    stroke-dashoffset: 1;
-                }
-
-                80% {
-                    opacity: 0.4;
-                }
-
-                100% {
-                    stroke-dasharray: 56, 0;
-                    stroke-dashoffset: 70;
-                    opacity: 1;
-                }
+            50% {
+                stroke-dasharray: 0, 0;
+                stroke-dashoffset: 1;
             }
 
-            @keyframes draw-second-line {
-                0% {
-                    stroke-dasharray: 0, 55;
-                    stroke-dashoffset: 1;
-                    opacity: 1;
-                }
-
-                50% {
-                    stroke-dasharray: 0, 0;
-                    stroke-dashoffset: 1;
-                }
-
-                80% {
-                    opacity: 0.4;
-                }
-
-                100% {
-                    stroke-dasharray: 55, 0;
-                    stroke-dashoffset: 70;
-                    opacity: 1;
-                }
+            80% {
+                opacity: 0.4;
             }
 
+            100% {
+                stroke-dasharray: 56, 0;
+                stroke-dashoffset: 70;
+                opacity: 1;
+            }
+        }
+
+        @keyframes draw-second-line {
+            0% {
+                stroke-dasharray: 0, 55;
+                stroke-dashoffset: 1;
+                opacity: 1;
+            }
+
+            50% {
+                stroke-dasharray: 0, 0;
+                stroke-dashoffset: 1;
+            }
+
+            80% {
+                opacity: 0.4;
+            }
+
+            100% {
+                stroke-dasharray: 55, 0;
+                stroke-dashoffset: 70;
+                opacity: 1;
+            }
+        }
     </style>
 </body>
 

@@ -9,6 +9,7 @@ class pn_noteitems extends HTMLElement {
     this.appendChild(this._ContainerElement);
     this.GeneralNoteData = {};
     this.fetchStatus = null;
+    window.addEventListener("resize", () => {this.adtFunct().njajal();console.log("njajal")});
   }
 
   connectedCallback() {
@@ -28,14 +29,14 @@ class pn_noteitems extends HTMLElement {
       that.style.display = "block";
     }
 
-    function showLoadingContent (element = that._ContainerElement.querySelector("div.content")) {
+    function showLoadingContent(element = that._ContainerElement.querySelector("div.content")) {
       element.innerHTML = "";
       const html = document.createElement("div");
       html.className = "container-loader";
-      html.innerHTML =`<div class="loader"></div><div class="loader_"></div><div id="loader-text" class="loader-text"></div>`
+      html.innerHTML = `<div class="loader"></div><div class="loader_"></div><div id="loader-text" class="loader-text"></div>`
       const style = document.createElement("style");
       style.textContent = `.list_notes .container div.content {display:block;} .container-loader { margin: 5cqh auto; width: 100%; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 3vh; } .loader-text { font-family: 'Poppins', sans-serif; color: #1B2E4D; display: flex; justify-content: center; align-items: center; text-transform: initial; } .words { color: #1B2E4D; font-size: 0; line-height: 1; } .words span { font-size: 1.1rem; display: inline-block; animation: move 1.5s ease-in-out infinite; font-weight: bold; } .wait:after { content: '.'; animation: dots 1.5s steps(8, end) infinite; } @keyframes dots { 0%, 20% { color: transparent; text-shadow: .25em 0 0 transparent, .5em 0 0 transparent } 40% { color: #1B2E4D; text-shadow: .25em 0 0 transparent, .5em 0 0 transparent } 60% { text-shadow: .25em 0 0 #1B2E4D, .5em 0 0 transparent } 100%, 80% { text-shadow: .25em 0 0 #1B2E4D, .5em 0 0 #1B2E4D } } @keyframes move { 0% { transform: translate(0%, 10%); } 25% { text-shadow: 0 15px 35px rgba(0, 0, 0, 0.75); } 50% { transform: translate(10%, -10%); } 75% { text-shadow: 0 15px 35px rgba(0, 0, 0, 0.75); } 100% { transform: translate(0%, 10%); } } .loader { width: 10%; aspect-ratio: 1; background: linear-gradient(45deg, #7CD4D1 50%, #0000 0), linear-gradient(45deg, #0000 50%, #7CD4D1 0), linear-gradient(-45deg, #7FA7FB 50%, #0000 0), linear-gradient(-45deg, #0000 50%, #7FA7FB 0), linear-gradient(#1B2E4D 0 0); background-size: 50% 50%; background-repeat: no-repeat; animation: l18 1.5s infinite; } @keyframes l18 { 0% { background-position: 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50% } 25% { background-position: 0 100%, 100% 0, 50% 50%, 50% 50%, 50% 50% } 50% { background-position: 0 100%, 100% 0, 100% 100%, 0 0, 50% 50% } 75% { background-position: 50% 50%, 50% 50%, 100% 100%, 0 0, 50% 50% } 100% { background-position: 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50% } } .loader_ { width: 35%; height: 1vh; border-radius: 40px; color: #60B99A; border: 2px solid; position: relative; overflow: hidden; } .loader_::before { content: ""; position: absolute; margin: 2px; width: 14px; top: 0; bottom: 0; left: -20px; border-radius: inherit; background: currentColor; box-shadow: -10px 0 12px 3px currentColor; clip-path: polygon(0 5%, 100% 0, 100% 100%, 0 95%, -30px 50%); animation: l14 1.5s infinite linear; } @keyframes l14 { 100% { left: calc(100% + 20px) } }`
-      
+
       element.appendChild(html);
       element.appendChild(style);
       js();
@@ -56,17 +57,17 @@ class pn_noteitems extends HTMLElement {
         wordsContainer.appendChild(span);
         loaderText.appendChild(wordsContainer);
       }
-      
-      return {js:js}
+
+      return { js: js }
     }
 
-    function showEmptyContent (element=that._ContainerElement.querySelector("div.content"), message) {
+    function showEmptyContent(element = that._ContainerElement.querySelector("div.content"), message) {
       // element = element === undefined ? defaultElement : that._ContainerElement.querySelector("div.content");
       // message = message === undefined ? defaultMessage : message;
-      if (message) { message = message } else { message = "Tidak Ada Data Yang Ditampilkan. Catatan Kosong."};
+      if (message) { message = message } else { message = "Tidak Ada Data Yang Ditampilkan. Catatan Kosong." };
       const html = document.createElement("div");
       html.className = "container-Empty";
-      html.innerHTML =`<div class="loader" style="text-align:center;color:#365486;display:flex;flex-direction: column;align-items: center;justify-content: center;"><img src="empty.gif" alt=""><h1>${message}</h1></div><style>.container .list_notes div.content {display: block;}</style>`
+      html.innerHTML = `<div class="loader" style="text-align:center;color:#365486;display:flex;flex-direction: column;align-items: center;justify-content: center;"><img src="empty.gif" alt=""><h1>${message}</h1></div><style>.container .list_notes div.content {display: block;}</style>`
       element.innerHTML = "";
       console.log(element)
       element.appendChild(html);
@@ -88,18 +89,18 @@ class pn_noteitems extends HTMLElement {
         const { response_AR, responseJson_AR, error_AR } = await NotesApi.getArchived();
         notes = responseJson?.data;
         archNotes = responseJson_AR?.data;
-        if (error||error_AR) {console.log(error, error_AR);that.fetchStatus = error}
+        if (error || error_AR) { console.log(error, error_AR); that.fetchStatus = error }
 
-        if(notes && archNotes){
+        if (notes && archNotes) {
           console.log("true")
           allNotes = notes.concat(archNotes)
-        } else if (!notes && archNotes){
+        } else if (!notes && archNotes) {
           allNotes = archNotes
-        } else if (notes && !archNotes){
+        } else if (notes && !archNotes) {
           console.log(archNotes)
           console.log("false")
           allNotes = notes
-        } else {allNotes = {}}
+        } else { allNotes = {} }
 
         that.GeneralNoteData = allNotes;
         console.log(allNotes)
@@ -116,7 +117,7 @@ class pn_noteitems extends HTMLElement {
         return
       }
       let notesData = tabHandler().filteringDataBasedOnActiveTab(data);
-      if (notesData.length<1){
+      if (notesData.length < 1) {
         console.log("empty content");
         showEmptyContent();
         return
@@ -128,6 +129,7 @@ class pn_noteitems extends HTMLElement {
           const noteElement = document.createElement("pn-noteitem");
           noteElement.setAttribute("data-idNote", note.id);
           noteElement.innerHTML = `
+
                     <span slot="title">${note.title}</span>
                     <span slot="body">${note.body}</span>
                     <span slot="createdAt">${Utils.formatDateToReadable(note.createdAt)}</span>
@@ -137,8 +139,9 @@ class pn_noteitems extends HTMLElement {
 
           content_element.appendChild(noteElement);
         });
-      tabHandler().changeButtonWhenChangeTab()
+      tabHandler().changeButtonWhenChangeTab();
       categorizingHandler().addListenerButtonArchive();
+      njajal();
     }
 
     function listenAddNoteButton() {
@@ -146,8 +149,8 @@ class pn_noteitems extends HTMLElement {
         that._ContainerElement.querySelector("#addNewNote");
       addNoteElement.addEventListener("click", addNewNoteHandler);
       const refreshNoteElement =
-      that._ContainerElement.querySelector("#refreshNote");
-    refreshNoteElement.addEventListener("click", fetchAndDisplayNotes);
+        that._ContainerElement.querySelector("#refreshNote");
+      refreshNoteElement.addEventListener("click", fetchAndDisplayNotes);
     }
 
     function addNewNoteHandler() {
@@ -161,7 +164,7 @@ class pn_noteitems extends HTMLElement {
           var doc = document.createElement("div");
           doc.classList.add("addNewNote");
           let modal_title = "Tambahkan Catatan Baru";
-          if (edit) {modal_title = "Edit Catatan"}
+          if (edit) { modal_title = "Edit Catatan" }
           var element = `
                         <div class=demo-page>
                             <main class=demo-page-content>
@@ -302,11 +305,12 @@ class pn_noteitems extends HTMLElement {
             body: noteBody,
           };
           let confirmValue = {};
-          if (edit==true) {
-            confirmValue.title = ["Perbarui Catatan?"];confirmValue.body=[`Apakah Anda Yakin ingin menyimpan Perubahan pada catatan berjudul "${title}"?`];
-            confirmValue.ok="Simpan";confirmValue.success="Sukses Memperbarui Catatan";confirmValue.loading="Memperbarui Catatan";confirmValue.failed="Gagal Memperbarui catatan!"
+          if (edit == true) {
+            confirmValue.title = ["Perbarui Catatan?"]; confirmValue.body = [`Apakah Anda Yakin ingin menyimpan Perubahan pada catatan berjudul "${title}"?`];
+            confirmValue.ok = "Simpan"; confirmValue.success = "Sukses Memperbarui Catatan"; confirmValue.loading = "Memperbarui Catatan"; confirmValue.failed = "Gagal Memperbarui catatan!"
           } else {
-            confirmValue.title=[`Tambahkan Catatan?`];confirmValue.body=[`Apakah Anda yakin ingin menambahkan catatan berjudul "${title}" ke dalam Daftar Catatan?`];confirmValue.ok="Tambahkan";confirmValue.success="Sukses Menambahkan Catatan";confirmValue.loading="Sedang Menambahkan";confirmValue.failed="Gagal Menambahkan"}
+            confirmValue.title = [`Tambahkan Catatan?`]; confirmValue.body = [`Apakah Anda yakin ingin menambahkan catatan berjudul "${title}" ke dalam Daftar Catatan?`]; confirmValue.ok = "Tambahkan"; confirmValue.success = "Sukses Menambahkan Catatan"; confirmValue.loading = "Sedang Menambahkan"; confirmValue.failed = "Gagal Menambahkan"
+          }
           var ConfirmBox = Utils.generalConfirmDialogBuilder();
           console.log(confirmValue)
           console.log(edit)
@@ -314,24 +318,25 @@ class pn_noteitems extends HTMLElement {
             document.body,
             {
               ok: async function () {
-                if (edit==true){
+                if (edit == true) {
                   const { response, responseJson, error } = await NotesApi.editNoteById(id_note, note_data);
-                  confirmValue.response = response; confirmValue.responseJson = responseJson; confirmValue.error=error;
+                  confirmValue.response = response; confirmValue.responseJson = responseJson; confirmValue.error = error;
                   console.log(responseJson)
                   console.log(response)
                 } else {
-                const { response, responseJson, error } = await NotesApi.addNote(note_data);
-                confirmValue.response = response; confirmValue.responseJson = responseJson; confirmValue.error=error;
+                  const { response, responseJson, error } = await NotesApi.addNote(note_data);
+                  confirmValue.response = response; confirmValue.responseJson = responseJson; confirmValue.error = error;
                 }
                 if (confirmValue.error || !confirmValue.response.ok || (confirmValue.responseJson.status != 'success')) {
-                  if(confirmValue.responseJson) {
+                  if (confirmValue.responseJson) {
                     if (confirmValue.responseJson.message) {
                       confBox.failed(confBox.instance, confirmValue.responseJson.message);
-                  } else {
-                      confBox.failed(confBox.instance, "Sistem sedang mengalami gangguan, mohon coba lagi nanti.");}
+                    } else {
+                      confBox.failed(confBox.instance, "Sistem sedang mengalami gangguan, mohon coba lagi nanti.");
+                    }
                   } else if (confirmValue.error) {
                     confBox.failed(confBox.instance, confirmValue.error);
-                  } else {confBox.failed(confBox.instance, "Sistem sedang mengalami gangguan, mohon coba lagi nanti.")}                  
+                  } else { confBox.failed(confBox.instance, "Sistem sedang mengalami gangguan, mohon coba lagi nanti.") }
                 } else {
                   console.log("sukses edit/tambah")
                   confBox.success(confBox.instance);
@@ -343,7 +348,7 @@ class pn_noteitems extends HTMLElement {
                 return;
               },
             },
-          confirmValue.title,
+            confirmValue.title,
             confirmValue.body,
             true,
             confirmValue.ok,
@@ -365,7 +370,7 @@ class pn_noteitems extends HTMLElement {
     function generalSearchHandler() {
       // that = that;
       function handleSearch(searchString) {
-        if (Object.keys(that.GeneralNoteData).length<1){return}
+        if (Object.keys(that.GeneralNoteData).length < 1) { return }
 
         let jsonDataString = that.GeneralNoteData;
         let filteredNotesName = jsonDataString.filter(
@@ -485,7 +490,7 @@ class pn_noteitems extends HTMLElement {
                   console.error(`Sedang Gangguan: Error Tidak Diketahui`);
                   confBox.failed(confBox.instance, "Sistem sedang Error. Coba Lagi Nanti.");
                 }
-                
+
               } else {
                 confBox.success(confBox.instance);
                 that.adtFunct().fetchAndDisplayNotes();
@@ -535,7 +540,7 @@ class pn_noteitems extends HTMLElement {
       function filteringDataBasedOnActiveTab(notes_data) {
         console.log(Object.keys(that.GeneralNoteData))
         console.log(notes_data)
-        if (tabContent && Object.keys(that.GeneralNoteData).length>0) {
+        if (tabContent && Object.keys(that.GeneralNoteData).length > 0) {
           if (tabContent === "Catatan Utama") {
             return notes_data.filter((note) => note.archived == false);
           } else if (tabContent === "Catatan Diarsipkan") {
@@ -551,14 +556,15 @@ class pn_noteitems extends HTMLElement {
       function changeButtonWhenChangeTab() {
         let items = document.querySelector("pn-notes-wrapper").shadowRoot.querySelectorAll("pn-noteitem");
         let newNote = that._ContainerElement.querySelector(".container #newNoteTrigger");
-        if (tabContent === "Catatan Utama") { newNote.style.display = "block";
+        if (tabContent === "Catatan Utama") {
+          newNote.style.display = "block";
         } else if (tabContent === "Catatan Diarsipkan") {
           items.forEach((item) => {
             let buttonArchive = item.shadowRoot.querySelector(".button_select div.arsipkan");
             buttonArchive.innerHTML = `<svg width="20px" height="20px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <path fill="none" d="M0 0h24v24H0z"></path> <path fill-rule="nonzero" d="M20 3l2 4v13a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V7.004L4 3h16zm-8 7l-4 4h3v4h2v-4h3l-4-4zm6.764-5H5.236l-.999 2h15.527l-1-2z"></path> </g> </g></svg>`;
             buttonArchive.className = "unarsipkan"
           });
-          
+
           // newNote.style.display = "none";
         } else {
           console.log("tabCOntentKosong")
@@ -572,6 +578,32 @@ class pn_noteitems extends HTMLElement {
       };
     }
 
+    function njajal() {
+      let elements = document.querySelector("pn-notes-wrapper").shadowRoot.querySelector("pn-noteitems").querySelectorAll("pn-noteitem");
+      function truncateText(text, maxLength) {
+        if (text.length > maxLength) {
+            return text.slice(0, maxLength) + '...';
+        }
+        return text;
+    }
+      elements.forEach(noteitemElement => {
+        const id = noteitemElement.getAttribute("data-idnote");
+        let offsetWidth = noteitemElement.offsetWidth;
+        let maxLength = Math.round(0.5146 * offsetWidth - 81.02);
+        console.log(noteitemElement);
+        console.log(`offsetWidth: ${offsetWidth} Maxlenght = ${maxLength} `);
+        let spanElement = noteitemElement.querySelector('span[slot="body"]');
+
+        const note = that.GeneralNoteData.find(note => note.id === id);
+
+        if (note) {
+          if (spanElement) {
+              spanElement.textContent = truncateText(note.body, maxLength);
+          }
+      }
+      })
+    }
+
     return {
       addClassList: addClassList,
       displayNotes: displayNotes,
@@ -582,7 +614,8 @@ class pn_noteitems extends HTMLElement {
       categorizingHandler: categorizingHandler,
       tabHandler: tabHandler,
       fetchAndDisplayNotes: fetchAndDisplayNotes,
-      showLoadingContent:showLoadingContent,
+      showLoadingContent: showLoadingContent,
+      njajal:njajal,
     };
   }
 
