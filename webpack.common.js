@@ -30,13 +30,13 @@ module.exports = {
       filename: 'index.html',
     }),
     new CopyWebpackPlugin({
-        patterns: [
-          {
-            from: path.join(__dirname, 'src/img'),
-            to: path.join(__dirname, 'dist'),
-          },
-        ],
-      }),
+      patterns: [
+        {
+          from: path.join(__dirname, 'src/img'),
+          to: path.join(__dirname, 'dist'),
+        },
+      ],
+    }),
   ],
   devServer: {
     client: {
@@ -45,5 +45,10 @@ module.exports = {
     devMiddleware: {
       writeToDisk: true
     },
+  },
+  performance: {
+    hints: false,
+    maxEntrypointSize: 512000,
+    maxAssetSize: 1024000
   },
 };
