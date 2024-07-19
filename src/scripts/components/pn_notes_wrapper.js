@@ -1,13 +1,13 @@
-import Utils from "../utils/utils.js";
+import Utils from '../utils/utils.js';
 
 class pn_notes_wrapper extends HTMLElement {
   constructor() {
     super();
-    this._shadowRoot = this.attachShadow({ mode: "open" });
-    this._mainElement = document.createElement("main");
-    this._sectionElement = document.createElement("section");
-    this._wrapperElement = document.createElement("div");
-    this._style = document.createElement("style");
+    this._shadowRoot = this.attachShadow({ mode: 'open' });
+    this._mainElement = document.createElement('main');
+    this._sectionElement = document.createElement('section');
+    this._wrapperElement = document.createElement('div');
+    this._style = document.createElement('style');
     this._sectionElement.appendChild(this._wrapperElement);
     this._mainElement.appendChild(this._sectionElement);
     this._shadowRoot.appendChild(this._mainElement);
@@ -39,7 +39,7 @@ class pn_notes_wrapper extends HTMLElement {
     const that = this;
 
     function addClassList() {
-      that._wrapperElement.classList.add("container", "container-section");
+      that._wrapperElement.classList.add('container', 'container-section');
     }
 
     function updateStyle() {
@@ -58,4 +58,4 @@ class pn_notes_wrapper extends HTMLElement {
   }
 }
 
-customElements.define("pn-notes-wrapper", pn_notes_wrapper);
+customElements.define('pn-notes-wrapper', pn_notes_wrapper);

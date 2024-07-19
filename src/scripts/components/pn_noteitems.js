@@ -1,15 +1,18 @@
-import Notes from "../../database/notes.js";
-import NotesApi from "../../database/notes-api.js";
-import Utils from "../utils/utils.js";
+import Notes from '../../database/notes.js';
+import NotesApi from '../../database/notes-api.js';
+import Utils from '../utils/utils.js';
 class pn_noteitems extends HTMLElement {
   constructor() {
     super();
-    this._ContainerElement = document.createElement("div");
-    this._style = document.createElement("style");
+    this._ContainerElement = document.createElement('div');
+    this._style = document.createElement('style');
     this.appendChild(this._ContainerElement);
     this.GeneralNoteData = {};
     this.fetchStatus = null;
-    window.addEventListener("resize", () => { this.adtFunct().njajal(); console.log("njajal") });
+    window.addEventListener('resize', () => {
+      this.adtFunct().njajal();
+      console.log('njajal');
+    });
   }
 
   connectedCallback() {
@@ -26,55 +29,64 @@ class pn_noteitems extends HTMLElement {
     var that = this;
 
     function addClassList() {
-      that.style.display = "block";
+      that.style.display = 'block';
     }
 
-    function showLoadingContent(element = that._ContainerElement.querySelector("div.content")) {
-      element.innerHTML = "";
-      const html = document.createElement("div");
-      html.className = "container-loader";
-      html.innerHTML = `<div class="loader"></div><div class="loader_"></div><div id="loader-text" class="loader-text"></div>`
-      const style = document.createElement("style");
-      style.textContent = `.list_notes .container div.content {display:block;} .container-loader { margin: 5cqh auto; width: 100%; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 3vh; } .loader-text { font-family: 'Poppins', sans-serif; color: #1B2E4D; display: flex; justify-content: center; align-items: center; text-transform: initial; } .words { color: #1B2E4D; font-size: 0; line-height: 1; } .words span { font-size: 1.1rem; display: inline-block; animation: move 1.5s ease-in-out infinite; font-weight: bold; } .wait:after { content: '.'; animation: dots 1.5s steps(8, end) infinite; } @keyframes dots { 0%, 20% { color: transparent; text-shadow: .25em 0 0 transparent, .5em 0 0 transparent } 40% { color: #1B2E4D; text-shadow: .25em 0 0 transparent, .5em 0 0 transparent } 60% { text-shadow: .25em 0 0 #1B2E4D, .5em 0 0 transparent } 100%, 80% { text-shadow: .25em 0 0 #1B2E4D, .5em 0 0 #1B2E4D } } @keyframes move { 0% { transform: translate(0%, 10%); } 25% { text-shadow: 0 15px 35px rgba(0, 0, 0, 0.75); } 50% { transform: translate(10%, -10%); } 75% { text-shadow: 0 15px 35px rgba(0, 0, 0, 0.75); } 100% { transform: translate(0%, 10%); } } .loader { width: 10%; aspect-ratio: 1; background: linear-gradient(45deg, #7CD4D1 50%, #0000 0), linear-gradient(45deg, #0000 50%, #7CD4D1 0), linear-gradient(-45deg, #7FA7FB 50%, #0000 0), linear-gradient(-45deg, #0000 50%, #7FA7FB 0), linear-gradient(#1B2E4D 0 0); background-size: 50% 50%; background-repeat: no-repeat; animation: l18 1.5s infinite; } @keyframes l18 { 0% { background-position: 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50% } 25% { background-position: 0 100%, 100% 0, 50% 50%, 50% 50%, 50% 50% } 50% { background-position: 0 100%, 100% 0, 100% 100%, 0 0, 50% 50% } 75% { background-position: 50% 50%, 50% 50%, 100% 100%, 0 0, 50% 50% } 100% { background-position: 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50% } } .loader_ { width: 35%; height: 1vh; border-radius: 40px; color: #60B99A; border: 2px solid; position: relative; overflow: hidden; } .loader_::before { content: ""; position: absolute; margin: 2px; width: 14px; top: 0; bottom: 0; left: -20px; border-radius: inherit; background: currentColor; box-shadow: -10px 0 12px 3px currentColor; clip-path: polygon(0 5%, 100% 0, 100% 100%, 0 95%, -30px 50%); animation: l14 1.5s infinite linear; } @keyframes l14 { 100% { left: calc(100% + 20px) } }`
+    function showLoadingContent(
+      element = that._ContainerElement.querySelector('div.content')
+    ) {
+      element.innerHTML = '';
+      const html = document.createElement('div');
+      html.className = 'container-loader';
+      html.innerHTML = `<div class="loader"></div><div class="loader_"></div><div id="loader-text" class="loader-text"></div>`;
+      const style = document.createElement('style');
+      style.textContent = `.list_notes .container div.content {display:block;} .container-loader { margin: 5cqh auto; width: 100%; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 3vh; } .loader-text { font-family: 'Poppins', sans-serif; color: #1B2E4D; display: flex; justify-content: center; align-items: center; text-transform: initial; } .words { color: #1B2E4D; font-size: 0; line-height: 1; } .words span { font-size: 1.1rem; display: inline-block; animation: move 1.5s ease-in-out infinite; font-weight: bold; } .wait:after { content: '.'; animation: dots 1.5s steps(8, end) infinite; } @keyframes dots { 0%, 20% { color: transparent; text-shadow: .25em 0 0 transparent, .5em 0 0 transparent } 40% { color: #1B2E4D; text-shadow: .25em 0 0 transparent, .5em 0 0 transparent } 60% { text-shadow: .25em 0 0 #1B2E4D, .5em 0 0 transparent } 100%, 80% { text-shadow: .25em 0 0 #1B2E4D, .5em 0 0 #1B2E4D } } @keyframes move { 0% { transform: translate(0%, 10%); } 25% { text-shadow: 0 15px 35px rgba(0, 0, 0, 0.75); } 50% { transform: translate(10%, -10%); } 75% { text-shadow: 0 15px 35px rgba(0, 0, 0, 0.75); } 100% { transform: translate(0%, 10%); } } .loader { width: 10%; aspect-ratio: 1; background: linear-gradient(45deg, #7CD4D1 50%, #0000 0), linear-gradient(45deg, #0000 50%, #7CD4D1 0), linear-gradient(-45deg, #7FA7FB 50%, #0000 0), linear-gradient(-45deg, #0000 50%, #7FA7FB 0), linear-gradient(#1B2E4D 0 0); background-size: 50% 50%; background-repeat: no-repeat; animation: l18 1.5s infinite; } @keyframes l18 { 0% { background-position: 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50% } 25% { background-position: 0 100%, 100% 0, 50% 50%, 50% 50%, 50% 50% } 50% { background-position: 0 100%, 100% 0, 100% 100%, 0 0, 50% 50% } 75% { background-position: 50% 50%, 50% 50%, 100% 100%, 0 0, 50% 50% } 100% { background-position: 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50% } } .loader_ { width: 35%; height: 1vh; border-radius: 40px; color: #60B99A; border: 2px solid; position: relative; overflow: hidden; } .loader_::before { content: ""; position: absolute; margin: 2px; width: 14px; top: 0; bottom: 0; left: -20px; border-radius: inherit; background: currentColor; box-shadow: -10px 0 12px 3px currentColor; clip-path: polygon(0 5%, 100% 0, 100% 100%, 0 95%, -30px 50%); animation: l14 1.5s infinite linear; } @keyframes l14 { 100% { left: calc(100% + 20px) } }`;
 
       element.appendChild(html);
       element.appendChild(style);
       js();
 
       function js() {
-        const text = "Pustanotes sedang memuat";
-        const loaderText = element.querySelector("#loader-text");
-        const wordsContainer = document.createElement("div");
-        wordsContainer.className = "words";
-        text.split("").forEach((char, index) => {
-          const span = document.createElement("span");
-          span.innerHTML = char === " " ? "&nbsp;" : char;
+        const text = 'Pustanotes sedang memuat';
+        const loaderText = element.querySelector('#loader-text');
+        const wordsContainer = document.createElement('div');
+        wordsContainer.className = 'words';
+        text.split('').forEach((char, index) => {
+          const span = document.createElement('span');
+          span.innerHTML = char === ' ' ? '&nbsp;' : char;
           span.style.animationDelay = `${index * 0.01}s`;
           wordsContainer.appendChild(span);
         });
-        const span = document.createElement("span");
-        span.className = "wait";
+        const span = document.createElement('span');
+        span.className = 'wait';
         wordsContainer.appendChild(span);
         loaderText.appendChild(wordsContainer);
       }
 
-      return { js: js }
+      return { js: js };
     }
 
-    function showEmptyContent(element = that._ContainerElement.querySelector("div.content"), message) {
-      if (message) { message = message } else { message = "Tidak Ada Data Yang Ditampilkan. Catatan Kosong." };
-      const html = document.createElement("div");
-      html.className = "container-Empty";
-      html.innerHTML = `<div class="loader" style="text-align:center;color:#365486;display:flex;flex-direction: column;align-items: center;justify-content: center;"><img src="empty.gif" alt=""><h1>${message}</h1></div><style>.container .list_notes div.content {display: block;}</style>`
-      element.innerHTML = "";
-      console.log(element)
+    function showEmptyContent(
+      element = that._ContainerElement.querySelector('div.content'),
+      message
+    ) {
+      if (message) {
+        message = message;
+      } else {
+        message = 'Tidak Ada Data Yang Ditampilkan. Catatan Kosong.';
+      }
+      const html = document.createElement('div');
+      html.className = 'container-Empty';
+      html.innerHTML = `<div class="loader" style="text-align:center;color:#365486;display:flex;flex-direction: column;align-items: center;justify-content: center;"><img src="empty.gif" alt=""><h1>${message}</h1></div><style>.container .list_notes div.content {display: block;}</style>`;
+      element.innerHTML = '';
+      console.log(element);
       element.appendChild(html);
     }
 
     function clearContentNotes() {
       const content_element =
-        that._ContainerElement.querySelector("div.content");
-      content_element.innerHTML = "";
+        that._ContainerElement.querySelector('div.content');
+      content_element.innerHTML = '';
     }
 
     const fetchAndDisplayNotes = async () => {
@@ -84,24 +96,30 @@ class pn_noteitems extends HTMLElement {
         let notes = {};
         let archNotes = {};
         const { response, responseJson, error } = await NotesApi.getAll();
-        const { response_AR, responseJson_AR, error_AR } = await NotesApi.getArchived();
+        const { response_AR, responseJson_AR, error_AR } =
+          await NotesApi.getArchived();
         notes = responseJson?.data;
         archNotes = responseJson_AR?.data;
-        if (error || error_AR) { console.log(error, error_AR); that.fetchStatus = error }
+        if (error || error_AR) {
+          console.log(error, error_AR);
+          that.fetchStatus = error;
+        }
 
         if (notes && archNotes) {
-          console.log("true")
-          allNotes = notes.concat(archNotes)
+          console.log('true');
+          allNotes = notes.concat(archNotes);
         } else if (!notes && archNotes) {
-          allNotes = archNotes
+          allNotes = archNotes;
         } else if (notes && !archNotes) {
-          console.log(archNotes)
-          console.log("false")
-          allNotes = notes
-        } else { allNotes = {} }
+          console.log(archNotes);
+          console.log('false');
+          allNotes = notes;
+        } else {
+          allNotes = {};
+        }
 
         that.GeneralNoteData = allNotes;
-        console.log(allNotes)
+        console.log(allNotes);
         displayNotes(allNotes);
       } catch (error) {
         console.log(error);
@@ -111,22 +129,25 @@ class pn_noteitems extends HTMLElement {
     function displayNotes(data) {
       clearContentNotes();
       if (that.fetchStatus) {
-        showEmptyContent(undefined, "SISTEM API TIDAK MERESPONS. MOHON COBA LAGI NANTI.")
-        return
+        showEmptyContent(
+          undefined,
+          'SISTEM API TIDAK MERESPONS. MOHON COBA LAGI NANTI.'
+        );
+        return;
       }
       let notesData = tabHandler().filteringDataBasedOnActiveTab(data);
       if (notesData.length < 1) {
-        console.log("empty content");
+        console.log('empty content');
         showEmptyContent();
-        return
+        return;
       }
       console.log(notesData);
       notesData
         .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
         .forEach((note) => {
-          const noteElement = document.createElement("pn-noteitem");
-          noteElement.setAttribute("data-idNote", note.id);
-          noteElement.classList.add("reveal")
+          const noteElement = document.createElement('pn-noteitem');
+          noteElement.setAttribute('data-idNote', note.id);
+          noteElement.classList.add('reveal');
           noteElement.innerHTML = `
 
                     <span slot="title">${note.title}</span>
@@ -134,23 +155,22 @@ class pn_noteitems extends HTMLElement {
                     <span slot="createdAt">${Utils.formatDateToReadable(note.createdAt)}</span>
                 `;
           const content_element =
-            that._ContainerElement.querySelector("div.content");
+            that._ContainerElement.querySelector('div.content');
 
           content_element.appendChild(noteElement);
         });
       tabHandler().changeButtonWhenChangeTab();
       categorizingHandler().addListenerButtonArchive();
       njajal();
-
     }
 
     function listenAddNoteButton() {
       const addNoteElement =
-        that._ContainerElement.querySelector("#addNewNote");
-      addNoteElement.addEventListener("click", addNewNoteHandler);
+        that._ContainerElement.querySelector('#addNewNote');
+      addNoteElement.addEventListener('click', addNewNoteHandler);
       const refreshNoteElement =
-        that._ContainerElement.querySelector("#refreshNote");
-      refreshNoteElement.addEventListener("click", fetchAndDisplayNotes);
+        that._ContainerElement.querySelector('#refreshNote');
+      refreshNoteElement.addEventListener('click', fetchAndDisplayNotes);
     }
 
     function addNewNoteHandler() {
@@ -160,11 +180,13 @@ class pn_noteitems extends HTMLElement {
     function addNewNoteHandlerExec(edit = false, id_note = null) {
       that = that;
       function showModal() {
-        if (document.querySelector(".addNewNote") === null) {
-          var doc = document.createElement("div");
-          doc.classList.add("addNewNote");
-          let modal_title = "Tambahkan Catatan Baru";
-          if (edit) { modal_title = "Edit Catatan" }
+        if (document.querySelector('.addNewNote') === null) {
+          var doc = document.createElement('div');
+          doc.classList.add('addNewNote');
+          let modal_title = 'Tambahkan Catatan Baru';
+          if (edit) {
+            modal_title = 'Edit Catatan';
+          }
           var element = `
                         <div class=demo-page>
                             <main class=demo-page-content>
@@ -187,61 +209,61 @@ class pn_noteitems extends HTMLElement {
           doc.innerHTML = element;
           document.body.appendChild(doc);
         }
-        var title_field = document.body.querySelector("#title");
-        var body_field = document.body.querySelector("#note_body");
-        var title_warning = document.body.querySelector("#warning_title");
-        var body_warning = document.body.querySelector("#warning_body");
-        var cancel = document.body.querySelector("#cancelAddNewNote");
-        var submit = document.body.querySelector("#submitAddNewNote");
+        var title_field = document.body.querySelector('#title');
+        var body_field = document.body.querySelector('#note_body');
+        var title_warning = document.body.querySelector('#warning_title');
+        var body_warning = document.body.querySelector('#warning_body');
+        var cancel = document.body.querySelector('#cancelAddNewNote');
+        var submit = document.body.querySelector('#submitAddNewNote');
         let respon = {};
-        cancel.addEventListener("click", hideModal);
-        submit.addEventListener("click", submitNote);
+        cancel.addEventListener('click', hideModal);
+        submit.addEventListener('click', submitNote);
 
-        if (edit = true && (id_note != null)) {
-          const note = that.GeneralNoteData.find(note => note.id === id_note);
+        if ((edit = true && id_note != null)) {
+          const note = that.GeneralNoteData.find((note) => note.id === id_note);
           if (note) {
             title_field.value = note.title;
             body_field.value = note.body;
           }
         }
 
-        title_field.addEventListener("input", () => {
+        title_field.addEventListener('input', () => {
           if (title_field.value.length < 5) {
-            title_warning.textContent = "Judul Harus Lebih Dari 5 Karakter!";
-            title_warning.style.display = "block";
+            title_warning.textContent = 'Judul Harus Lebih Dari 5 Karakter!';
+            title_warning.style.display = 'block';
           } else {
-            title_warning.textContent = "";
-            title_warning.style.display = "none";
+            title_warning.textContent = '';
+            title_warning.style.display = 'none';
           }
         });
 
-        body_field.addEventListener("input", () => {
+        body_field.addEventListener('input', () => {
           if (body_field.value.length < 5) {
             body_warning.textContent =
-              "Isi Catatan Harus Lebih Dari 5 Karakter!";
-            body_warning.style.display = "block";
+              'Isi Catatan Harus Lebih Dari 5 Karakter!';
+            body_warning.style.display = 'block';
           } else {
-            body_warning.textContent = "";
-            body_warning.style.display = "none";
+            body_warning.textContent = '';
+            body_warning.style.display = 'none';
           }
         });
       }
       function hideModal() {
-        const modal = document.querySelector(".addNewNote");
+        const modal = document.querySelector('.addNewNote');
         if (modal) {
           modal.remove();
         }
       }
       function submitNote() {
-        const modal = document.querySelector(".addNewNote");
+        const modal = document.querySelector('.addNewNote');
         const dateNow = Date.now();
-        const title = modal.querySelector("#title").value;
-        const noteBody = modal.querySelector("#note_body").value;
-        var title_warning = document.body.querySelector("#warning_title");
-        var body_warning = document.body.querySelector("#warning_body");
+        const title = modal.querySelector('#title').value;
+        const noteBody = modal.querySelector('#note_body').value;
+        var title_warning = document.body.querySelector('#warning_title');
+        var body_warning = document.body.querySelector('#warning_body');
         if (!title) {
-          title_warning.textContent = "Judul Tidak Boleh Kosong!";
-          title_warning.style.display = "block";
+          title_warning.textContent = 'Judul Tidak Boleh Kosong!';
+          title_warning.style.display = 'block';
           var ConfirmBox = Utils.generalConfirmDialogBuilder();
           var confBox = new ConfirmBox(
             document.body,
@@ -253,11 +275,11 @@ class pn_noteitems extends HTMLElement {
             [`Judul Catatan Tidak Lengkap!`],
             [`Mohon Tambahkan Judul, Karena Tidak Boleh Kosong`],
             false,
-            "Ok",
+            'Ok'
           );
         } else if (!noteBody) {
-          body_warning.textContent = "Isi Catatan Tidak Boleh Kosong!";
-          body_warning.style.display = "block";
+          body_warning.textContent = 'Isi Catatan Tidak Boleh Kosong!';
+          body_warning.style.display = 'block';
           var ConfirmBox = Utils.generalConfirmDialogBuilder();
           var confBox = new ConfirmBox(
             document.body,
@@ -269,7 +291,7 @@ class pn_noteitems extends HTMLElement {
             [`Isi Catatan Kosong!`],
             [`Mohon tambahkan Isi catatan setidaknya 5 karakter`],
             false,
-            "Ok",
+            'Ok'
           );
         } else if (title.length < 5) {
           var ConfirmBox = Utils.generalConfirmDialogBuilder();
@@ -283,7 +305,7 @@ class pn_noteitems extends HTMLElement {
             [`Judul Catatan Minimal 5 Karakter!`],
             [`Mohon tambahkan Judul catatan setidaknya 5 karakter`],
             false,
-            "Ok",
+            'Ok'
           );
         } else if (noteBody.length < 5) {
           var ConfirmBox = Utils.generalConfirmDialogBuilder();
@@ -297,7 +319,7 @@ class pn_noteitems extends HTMLElement {
             [`Judul Catatan Minimal 5 Karakter!`],
             [`Mohon tambahkan Judul catatan setidaknya 5 karakter`],
             false,
-            "Ok",
+            'Ok'
           );
         } else {
           const note_data = {
@@ -306,39 +328,73 @@ class pn_noteitems extends HTMLElement {
           };
           let confirmValue = {};
           if (edit == true) {
-            confirmValue.title = ["Perbarui Catatan?"]; confirmValue.body = [`Apakah Anda Yakin ingin menyimpan Perubahan pada catatan berjudul "${Utils.truncateText(title, 100)}"?`];
-            confirmValue.ok = "Simpan"; confirmValue.success = "Sukses Memperbarui Catatan"; confirmValue.loading = "Memperbarui Catatan"; confirmValue.failed = "Gagal Memperbarui catatan!"
+            confirmValue.title = ['Perbarui Catatan?'];
+            confirmValue.body = [
+              `Apakah Anda Yakin ingin menyimpan Perubahan pada catatan berjudul "${Utils.truncateText(title, 100)}"?`,
+            ];
+            confirmValue.ok = 'Simpan';
+            confirmValue.success = 'Sukses Memperbarui Catatan';
+            confirmValue.loading = 'Memperbarui Catatan';
+            confirmValue.failed = 'Gagal Memperbarui catatan!';
           } else {
-            confirmValue.title = [`Tambahkan Catatan?`]; confirmValue.body = [`Apakah Anda yakin ingin menambahkan catatan berjudul "${Utils.truncateText(title, 100)}" ke dalam Daftar Catatan?`]; confirmValue.ok = "Tambahkan"; confirmValue.success = "Sukses Menambahkan Catatan"; confirmValue.loading = "Sedang Menambahkan"; confirmValue.failed = "Gagal Menambahkan"
+            confirmValue.title = [`Tambahkan Catatan?`];
+            confirmValue.body = [
+              `Apakah Anda yakin ingin menambahkan catatan berjudul "${Utils.truncateText(title, 100)}" ke dalam Daftar Catatan?`,
+            ];
+            confirmValue.ok = 'Tambahkan';
+            confirmValue.success = 'Sukses Menambahkan Catatan';
+            confirmValue.loading = 'Sedang Menambahkan';
+            confirmValue.failed = 'Gagal Menambahkan';
           }
           var ConfirmBox = Utils.generalConfirmDialogBuilder();
-          console.log(confirmValue)
-          console.log(edit)
+          console.log(confirmValue);
+          console.log(edit);
           var confBox = new ConfirmBox(
             document.body,
             {
               ok: async function () {
                 if (edit == true) {
-                  const { response, responseJson, error } = await NotesApi.editNoteById(id_note, note_data);
-                  confirmValue.response = response; confirmValue.responseJson = responseJson; confirmValue.error = error;
-                  console.log(responseJson)
-                  console.log(response)
+                  const { response, responseJson, error } =
+                    await NotesApi.editNoteById(id_note, note_data);
+                  confirmValue.response = response;
+                  confirmValue.responseJson = responseJson;
+                  confirmValue.error = error;
+                  console.log(responseJson);
+                  console.log(response);
                 } else {
-                  const { response, responseJson, error } = await NotesApi.addNote(note_data);
-                  confirmValue.response = response; confirmValue.responseJson = responseJson; confirmValue.error = error;
+                  const { response, responseJson, error } =
+                    await NotesApi.addNote(note_data);
+                  confirmValue.response = response;
+                  confirmValue.responseJson = responseJson;
+                  confirmValue.error = error;
                 }
-                if (confirmValue.error || !confirmValue.response.ok || (confirmValue.responseJson.status != 'success')) {
+                if (
+                  confirmValue.error ||
+                  !confirmValue.response.ok ||
+                  confirmValue.responseJson.status != 'success'
+                ) {
                   if (confirmValue.responseJson) {
                     if (confirmValue.responseJson.message) {
-                      confBox.failed(confBox.instance, confirmValue.responseJson.message);
+                      confBox.failed(
+                        confBox.instance,
+                        confirmValue.responseJson.message
+                      );
                     } else {
-                      confBox.failed(confBox.instance, "Sistem sedang mengalami gangguan, mohon coba lagi nanti.");
+                      confBox.failed(
+                        confBox.instance,
+                        'Sistem sedang mengalami gangguan, mohon coba lagi nanti.'
+                      );
                     }
                   } else if (confirmValue.error) {
                     confBox.failed(confBox.instance, confirmValue.error);
-                  } else { confBox.failed(confBox.instance, "Sistem sedang mengalami gangguan, mohon coba lagi nanti.") }
+                  } else {
+                    confBox.failed(
+                      confBox.instance,
+                      'Sistem sedang mengalami gangguan, mohon coba lagi nanti.'
+                    );
+                  }
                 } else {
-                  console.log("sukses edit/tambah")
+                  console.log('sukses edit/tambah');
                   confBox.success(confBox.instance);
                   hideModal();
                   that.adtFunct().fetchAndDisplayNotes();
@@ -352,7 +408,7 @@ class pn_noteitems extends HTMLElement {
             confirmValue.body,
             true,
             confirmValue.ok,
-            "Batal",
+            'Batal',
             confirmValue.success,
             true,
             confirmValue.loading,
@@ -370,22 +426,24 @@ class pn_noteitems extends HTMLElement {
     function generalSearchHandler() {
       // that = that;
       function handleSearch(searchString) {
-        if (Object.keys(that.GeneralNoteData).length < 1) { return }
+        if (Object.keys(that.GeneralNoteData).length < 1) {
+          return;
+        }
 
         let jsonDataString = that.GeneralNoteData;
         let filteredNotesName = jsonDataString.filter(
           (note) =>
             note.title.toLowerCase().includes(searchString.toLowerCase()) ||
-            note.body.toLowerCase().includes(searchString.toLowerCase()),
+            note.body.toLowerCase().includes(searchString.toLowerCase())
         );
         that.adtFunct().displayNotes(filteredNotesName);
       }
       function searchHandler() {
         const searchBar = that._ContainerElement.querySelector(
-          'input[type="search"][name="search"]',
+          'input[type="search"][name="search"]'
         );
         let timeoutId;
-        searchBar.addEventListener("keyup", (e) => {
+        searchBar.addEventListener('keyup', (e) => {
           clearTimeout(timeoutId);
           var searchString = e.target.value;
           timeoutId = setTimeout(() => {
@@ -399,27 +457,27 @@ class pn_noteitems extends HTMLElement {
       }
       function searchButtonClickHandler() {
         const searchBar = that._ContainerElement.querySelector(
-          'input[type="search"][name="search"]',
+          'input[type="search"][name="search"]'
         );
         const searchString = searchBar.value;
         handleSearch(searchString);
       }
       const searchButton = that._ContainerElement.querySelector(
-        'input[name="search_submit"]',
+        'input[name="search_submit"]'
       );
-      searchButton.addEventListener("click", searchButtonClickHandler);
+      searchButton.addEventListener('click', searchButtonClickHandler);
       const reset_submit = that._ContainerElement.querySelector(
-        'input[name="reset_submit"]',
+        'input[name="reset_submit"]'
       );
       reset_submit.addEventListener(
-        "click",
+        'click',
         function (e) {
           displayNotes(that.GeneralNoteData);
           that._ContainerElement.querySelector(
-            'input[type="search"][name="search"]',
-          ).value = "Cari Catatan disini";
+            'input[type="search"][name="search"]'
+          ).value = 'Cari Catatan disini';
         },
-        false,
+        false
       );
       searchHandler();
     }
@@ -428,69 +486,117 @@ class pn_noteitems extends HTMLElement {
       // EVENT LISTENER
       function addListenerButtonArchive() {
         document
-          .querySelector("pn-notes-wrapper")
-          .shadowRoot.querySelectorAll("pn-noteitem")
+          .querySelector('pn-notes-wrapper')
+          .shadowRoot.querySelectorAll('pn-noteitem')
           .forEach((noteItem) => {
             const buttonSelect =
-              noteItem.shadowRoot.querySelectorAll(".button_select div");
+              noteItem.shadowRoot.querySelectorAll('.button_select div');
             buttonSelect.forEach((button) => {
-              button.addEventListener("click", function () {
+              button.addEventListener('click', function () {
                 let noteElement = noteItem.shadowRoot.host;
-                const idNote = noteElement.getAttribute("data-idnote");
-                const action = button.getAttribute("class");
+                const idNote = noteElement.getAttribute('data-idnote');
+                const action = button.getAttribute('class');
                 let note_title = that.GeneralNoteData.find(
-                  (note) => note.id === idNote,
+                  (note) => note.id === idNote
                 ).title;
-                if (action == "arsipkan") {
+                if (action == 'arsipkan') {
                   confirmTrigger(idNote, note_title, action);
-                } else if (action == "hapus") {
+                } else if (action == 'hapus') {
                   confirmTrigger(idNote, note_title, action);
-                } else if (action == "unarsipkan") {
+                } else if (action == 'unarsipkan') {
                   confirmTrigger(idNote, note_title, action);
-                } else if (action == "edit") {
+                } else if (action == 'edit') {
                   addNewNoteHandlerExec(true, idNote).showModal();
-                } else { console.log(action); return }
+                } else {
+                  console.log(action);
+                  return;
+                }
               });
-            })
+            });
           });
       }
       // GENERALCONFIRMTRIGGER
-      function confirmTrigger(note_id, note_title = "", action) {
+      function confirmTrigger(note_id, note_title = '', action) {
         let respon = {};
-        if (action == "arsipkan") {
-          respon["title"] = ["Arsipkan Catatan?", "Yakin?"]; respon["body"] = [`Apakah anda yakin ingin mengarsipkan catatan dengan judul: ${Utils.truncateText(note_title, 100)}`, "Apakah Anda Yakin?"]; respon["ok"] = "Arsipkan"; respon["success"] = "Sukses Mengarsipkan"; respon["loading"] = "Sedang Mengarsipkan"; respon["failed"] = "Gagal Mengarsipkan!";
-        } else if (action == "unarsipkan") {
-          respon["title"] = ["Unarsipkan Catatan?", "Yakin?"]; respon["body"] = [`Apakah anda yakin ingin membatalkan pengarsipan catatan dengan judul: ${Utils.truncateText(note_title, 100)}`, "Apakah Anda Yakin?"]; respon["ok"] = "Unarsipkan"; respon["success"] = "Sukses Membatalkan Arsip"; respon["loading"] = "Sedang Meng-unarsipkan"; respon["failed"] = "Gagal Meng-unarsipkan!";
-        } else if (action == "hapus") {
-          respon["title"] = ["Hapus Catatan?", "Yakin?"]; respon["body"] = [`Apakah anda yakin ingin menghapus catatan dengan judul: ${Utils.truncateText(note_title, 100)}`, "Apakah Anda Yakin?"]; respon["ok"] = "Hapus"; respon["success"] = "Sukses Dihapus"; respon["loading"] = "Sedang Menghapus"; respon["failed"] = "Gagal Menghapus!";
-        } else { return }
+        if (action == 'arsipkan') {
+          respon['title'] = ['Arsipkan Catatan?', 'Yakin?'];
+          respon['body'] = [
+            `Apakah anda yakin ingin mengarsipkan catatan dengan judul: ${Utils.truncateText(note_title, 100)}`,
+            'Apakah Anda Yakin?',
+          ];
+          respon['ok'] = 'Arsipkan';
+          respon['success'] = 'Sukses Mengarsipkan';
+          respon['loading'] = 'Sedang Mengarsipkan';
+          respon['failed'] = 'Gagal Mengarsipkan!';
+        } else if (action == 'unarsipkan') {
+          respon['title'] = ['Unarsipkan Catatan?', 'Yakin?'];
+          respon['body'] = [
+            `Apakah anda yakin ingin membatalkan pengarsipan catatan dengan judul: ${Utils.truncateText(note_title, 100)}`,
+            'Apakah Anda Yakin?',
+          ];
+          respon['ok'] = 'Unarsipkan';
+          respon['success'] = 'Sukses Membatalkan Arsip';
+          respon['loading'] = 'Sedang Meng-unarsipkan';
+          respon['failed'] = 'Gagal Meng-unarsipkan!';
+        } else if (action == 'hapus') {
+          respon['title'] = ['Hapus Catatan?', 'Yakin?'];
+          respon['body'] = [
+            `Apakah anda yakin ingin menghapus catatan dengan judul: ${Utils.truncateText(note_title, 100)}`,
+            'Apakah Anda Yakin?',
+          ];
+          respon['ok'] = 'Hapus';
+          respon['success'] = 'Sukses Dihapus';
+          respon['loading'] = 'Sedang Menghapus';
+          respon['failed'] = 'Gagal Menghapus!';
+        } else {
+          return;
+        }
         var ConfirmBox = Utils.generalConfirmDialogBuilder();
         var confBox = new ConfirmBox(
           document.body,
           {
             ok: async function () {
-              if (action == "hapus") {
-                const { response, responseJson, error } = await NotesApi.deleteNoteById(note_id);
-                respon["response"] = response; respon["responseJson"] = responseJson; respon["error"] = error;
-              } else if (action == "unarsipkan") {
-                const { response, responseJson, error } = await NotesApi.unarchiveNoteById(note_id);
-                respon["response"] = response; respon["responseJson"] = responseJson; respon["error"] = error;
-              } else if (action == "arsipkan") {
-                const { response, responseJson, error } = await NotesApi.archiveNoteById(note_id);
-                respon["response"] = response; respon["responseJson"] = responseJson; respon["error"] = error;
-              } else { console.log("bukan hapus bukan arsip") }
-              if (respon.error || !respon.response.ok || (respon.responseJson.status != 'success')) {
+              if (action == 'hapus') {
+                const { response, responseJson, error } =
+                  await NotesApi.deleteNoteById(note_id);
+                respon['response'] = response;
+                respon['responseJson'] = responseJson;
+                respon['error'] = error;
+              } else if (action == 'unarsipkan') {
+                const { response, responseJson, error } =
+                  await NotesApi.unarchiveNoteById(note_id);
+                respon['response'] = response;
+                respon['responseJson'] = responseJson;
+                respon['error'] = error;
+              } else if (action == 'arsipkan') {
+                const { response, responseJson, error } =
+                  await NotesApi.archiveNoteById(note_id);
+                respon['response'] = response;
+                respon['responseJson'] = responseJson;
+                respon['error'] = error;
+              } else {
+                console.log('bukan hapus bukan arsip');
+              }
+              if (
+                respon.error ||
+                !respon.response.ok ||
+                respon.responseJson.status != 'success'
+              ) {
                 if (respon.responseJson.message) {
-                  console.error(`Error servernya: ${respon.responseJson.message}`);
+                  console.error(
+                    `Error servernya: ${respon.responseJson.message}`
+                  );
                   confBox.failed(confBox.instance, respon.responseJson.message);
                 } else if (respon.error) {
                   console.error(`Sedang Gangguan: ${respon.error}`);
                   confBox.failed(confBox.instance, respon.error);
                 } else {
                   console.error(`Sedang Gangguan: Error Tidak Diketahui`);
-                  confBox.failed(confBox.instance, "Sistem sedang Error. Coba Lagi Nanti.");
+                  confBox.failed(
+                    confBox.instance,
+                    'Sistem sedang Error. Coba Lagi Nanti.'
+                  );
                 }
-
               } else {
                 confBox.success(confBox.instance);
                 that.adtFunct().fetchAndDisplayNotes();
@@ -499,12 +605,12 @@ class pn_noteitems extends HTMLElement {
             cancel: function () {
               return;
             },
-
           },
-          respon.title, respon.body,
+          respon.title,
+          respon.body,
           true,
           respon.ok,
-          "Batal",
+          'Batal',
           respon.success,
           true,
           respon.loading,
@@ -516,21 +622,23 @@ class pn_noteitems extends HTMLElement {
     }
 
     function tabHandler() {
-      let tabContent = ""
+      let tabContent = '';
       let currentActiveElement = that.parentElement.querySelector(
-        "pn-notelist .notes_info.tabs div.active",
+        'pn-notelist .notes_info.tabs div.active'
       );
-      if (currentActiveElement) { tabContent = currentActiveElement.textContent.trim(); }
+      if (currentActiveElement) {
+        tabContent = currentActiveElement.textContent.trim();
+      }
 
       function addEventListenerToTabs() {
         const tabs_Element = that.parentElement.querySelectorAll(
-          "pn-notelist .notes_info.tabs div",
+          'pn-notelist .notes_info.tabs div'
         );
         tabs_Element.forEach((tab) => {
-          tab.addEventListener("click", function () {
-            if (!this.classList.contains("active")) {
-              tabs_Element.forEach((t) => t.classList.remove("active"));
-              this.classList.add("active");
+          tab.addEventListener('click', function () {
+            if (!this.classList.contains('active')) {
+              tabs_Element.forEach((t) => t.classList.remove('active'));
+              this.classList.add('active');
               displayNotes(that.GeneralNoteData);
             }
           });
@@ -538,12 +646,12 @@ class pn_noteitems extends HTMLElement {
       }
 
       function filteringDataBasedOnActiveTab(notes_data) {
-        console.log(Object.keys(that.GeneralNoteData))
-        console.log(notes_data)
+        console.log(Object.keys(that.GeneralNoteData));
+        console.log(notes_data);
         if (tabContent && Object.keys(that.GeneralNoteData).length > 0) {
-          if (tabContent === "Catatan Utama") {
+          if (tabContent === 'Catatan Utama') {
             return notes_data.filter((note) => note.archived == false);
-          } else if (tabContent === "Catatan Diarsipkan") {
+          } else if (tabContent === 'Catatan Diarsipkan') {
             return notes_data.filter((note) => note.archived == true);
           } else {
             return notes_data;
@@ -554,20 +662,26 @@ class pn_noteitems extends HTMLElement {
       }
 
       function changeButtonWhenChangeTab() {
-        let items = document.querySelector("pn-notes-wrapper").shadowRoot.querySelectorAll("pn-noteitem");
-        let newNote = that._ContainerElement.querySelector(".container #newNoteTrigger");
-        if (tabContent === "Catatan Utama") {
-          newNote.style.display = "block";
-        } else if (tabContent === "Catatan Diarsipkan") {
+        let items = document
+          .querySelector('pn-notes-wrapper')
+          .shadowRoot.querySelectorAll('pn-noteitem');
+        let newNote = that._ContainerElement.querySelector(
+          '.container #newNoteTrigger'
+        );
+        if (tabContent === 'Catatan Utama') {
+          newNote.style.display = 'block';
+        } else if (tabContent === 'Catatan Diarsipkan') {
           items.forEach((item) => {
-            let buttonArchive = item.shadowRoot.querySelector(".button_select div.arsipkan");
+            let buttonArchive = item.shadowRoot.querySelector(
+              '.button_select div.arsipkan'
+            );
             buttonArchive.innerHTML = `<svg width="20px" height="20px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <path fill="none" d="M0 0h24v24H0z"></path> <path fill-rule="nonzero" d="M20 3l2 4v13a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V7.004L4 3h16zm-8 7l-4 4h3v4h2v-4h3l-4-4zm6.764-5H5.236l-.999 2h15.527l-1-2z"></path> </g> </g></svg>`;
-            buttonArchive.className = "unarsipkan"
+            buttonArchive.className = 'unarsipkan';
           });
 
           // newNote.style.display = "none";
         } else {
-          console.log("tabCOntentKosong")
+          console.log('tabCOntentKosong');
         }
       }
 
@@ -579,17 +693,20 @@ class pn_noteitems extends HTMLElement {
     }
 
     function njajal() {
-      let elements = document.querySelector("pn-notes-wrapper").shadowRoot.querySelector("pn-noteitems").querySelectorAll("pn-noteitem");
+      let elements = document
+        .querySelector('pn-notes-wrapper')
+        .shadowRoot.querySelector('pn-noteitems')
+        .querySelectorAll('pn-noteitem');
 
-      elements.forEach(noteitemElement => {
-        const id = noteitemElement.getAttribute("data-idnote");
+      elements.forEach((noteitemElement) => {
+        const id = noteitemElement.getAttribute('data-idnote');
         let offsetWidth = noteitemElement.offsetWidth;
         let maxLength = Math.round(0.5146 * offsetWidth - 81.02);
         console.log(noteitemElement);
         console.log(`offsetWidth: ${offsetWidth} Maxlenght = ${maxLength} `);
         let spanElement = noteitemElement.querySelector('span[slot="body"]');
 
-        const note = that.GeneralNoteData.find(note => note.id === id);
+        const note = that.GeneralNoteData.find((note) => note.id === id);
 
         if (note) {
           if (spanElement) {
@@ -600,33 +717,32 @@ class pn_noteitems extends HTMLElement {
 
       function scroll_Reveal() {
         function scrollTrigger(parent = document, selector, options = {}) {
-          let els = parent.querySelectorAll(selector)
-          els = Array.from(els)
-          els.forEach(el => {
-            addObserver(el, options)
-          })
+          let els = parent.querySelectorAll(selector);
+          els = Array.from(els);
+          els.forEach((el) => {
+            addObserver(el, options);
+          });
         }
 
         function addObserver(el, options) {
           let observer = new IntersectionObserver((entries, observer) => {
-            entries.forEach(entry => {
+            entries.forEach((entry) => {
               if (entry.isIntersecting) {
                 if (options.cb) {
-
-                  options.cb(el)
+                  options.cb(el);
                 } else {
-                  entry.target.classList.add('revealOn')
+                  entry.target.classList.add('revealOn');
                 }
               } else {
                 entry.target.classList.remove('revealOn');
               }
-            })
-          }, options)
-          observer.observe(el)
+            });
+          }, options);
+          observer.observe(el);
         }
         scrollTrigger(that._ContainerElement, '.reveal', {
           rootMargin: '-200px',
-        })
+        });
       }
       scroll_Reveal();
     }
@@ -654,4 +770,4 @@ class pn_noteitems extends HTMLElement {
   }
 }
 
-customElements.define("pn-noteitems", pn_noteitems);
+customElements.define('pn-noteitems', pn_noteitems);

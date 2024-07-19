@@ -40,15 +40,15 @@ module.exports = {
   ],
   devServer: {
     client: {
-      overlay: false
+      overlay: false,
     },
     devMiddleware: {
-      writeToDisk: true
+      writeToDisk: true,
     },
   },
   performance: {
     hints: false,
     maxEntrypointSize: 512000,
-    maxAssetSize: 1024000
+    maxAssetSize: 1024000,
   },
 };
