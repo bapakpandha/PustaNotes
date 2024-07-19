@@ -344,7 +344,6 @@ class Utils {
         this.status = 'hide';
       },
       success: function (element) {
-        console.log('success dieksekusi');
         var element_success = `<div id='confirm-box'><svg class='checkmark' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 52 52' style='margin: 1rem;'><circle class='checkmark__circle2' cx='26' cy='26' r='30' fill='none'></circle><circle class='checkmark__circle' cx='26' cy='26' r='25' fill='none'></circle><path class='checkmark__check' fill='none' d='M14.1 27.2l7.1 7.2 16.7-16.8'></path></svg><h2 id='confirm-header-title' style='font-size: 1.5rem;margin: 1rem;'>${this.successValue}</h2><div id='confirm-buttons'><button id='confirm-ok'>OK</button></div></div>`;
         element.innerHTML = element_success;
         element.style.opacity = 1;
@@ -399,7 +398,7 @@ class Utils {
         this.status = 'failed';
         if (rincian) {
           let that = this;
-          console.log(rincian);
+
           const html_rincian = `<div id="rincian-buttons" style="width:100%;text-align:center;bottom:0;left:0;padding-bottom:1em"><button id="confirm-ok" style="display:inline-block;background:0 0;color:#fff;font-family:Lato,Arial,sans-serif;font-weight:400;cursor:pointer;text-transform:uppercase;border:2px solid;margin:0 1em;padding:.6em 0;width:150px;border-radius:1rem">Lihat Rincian</button></div>`;
           const divRincian = document.createElement('div');
           divRincian.innerHTML = html_rincian;
@@ -453,9 +452,6 @@ class Utils {
                   ).innerHTML = self.title[currentIndex];
                   currentIndex++;
                 } else {
-                  console.log(
-                    `ss = ${self.showSuccess} sl = ${self.showLoading}`
-                  );
                   if (self.showSuccess && !self.showLoading) {
                     self.success(self.instance);
                   } else if (self.showLoading) {

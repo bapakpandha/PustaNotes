@@ -57,9 +57,6 @@ class pn_header extends HTMLElement {
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
-    console.log(`Atribut ${name} diubah.`);
-    console.log(`Nilai lama adalah ${oldValue}`);
-    console.log(`Nilai baru adalah ${newValue}`);
     this[`_${name}`] = newValue;
     this.render();
   }

@@ -11,7 +11,6 @@ class pn_noteitems extends HTMLElement {
     this.fetchStatus = null;
     window.addEventListener('resize', () => {
       this.adtFunct().njajal();
-      console.log('njajal');
     });
   }
 
@@ -79,7 +78,6 @@ class pn_noteitems extends HTMLElement {
       html.className = 'container-Empty';
       html.innerHTML = `<div class="loader" style="text-align:center;color:#365486;display:flex;flex-direction: column;align-items: center;justify-content: center;"><img src="empty.gif" alt=""><h1>${message}</h1></div><style>.container .list_notes div.content {display: block;}</style>`;
       element.innerHTML = '';
-      console.log(element);
       element.appendChild(html);
     }
 
@@ -101,28 +99,23 @@ class pn_noteitems extends HTMLElement {
         notes = responseJson?.data;
         archNotes = responseJson_AR?.data;
         if (error || error_AR) {
-          console.log(error, error_AR);
           that.fetchStatus = error;
         }
 
         if (notes && archNotes) {
-          console.log('true');
           allNotes = notes.concat(archNotes);
         } else if (!notes && archNotes) {
           allNotes = archNotes;
         } else if (notes && !archNotes) {
-          console.log(archNotes);
-          console.log('false');
           allNotes = notes;
         } else {
           allNotes = {};
         }
 
         that.GeneralNoteData = allNotes;
-        console.log(allNotes);
         displayNotes(allNotes);
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
     };
 
@@ -137,16 +130,15 @@ class pn_noteitems extends HTMLElement {
       }
       let notesData = tabHandler().filteringDataBasedOnActiveTab(data);
       if (notesData.length < 1) {
-        console.log('empty content');
         showEmptyContent();
         return;
       }
-      console.log(notesData);
       notesData
         .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
         .forEach((note) => {
           const noteElement = document.createElement('pn-noteitem');
           noteElement.setAttribute('data-idNote', note.id);
+          noteElement.style.overflow = 'hidden';
           noteElement.classList.add('reveal');
           noteElement.innerHTML = `
 
@@ -347,8 +339,6 @@ class pn_noteitems extends HTMLElement {
             confirmValue.failed = 'Gagal Menambahkan';
           }
           var ConfirmBox = Utils.generalConfirmDialogBuilder();
-          console.log(confirmValue);
-          console.log(edit);
           var confBox = new ConfirmBox(
             document.body,
             {
@@ -359,8 +349,6 @@ class pn_noteitems extends HTMLElement {
                   confirmValue.response = response;
                   confirmValue.responseJson = responseJson;
                   confirmValue.error = error;
-                  console.log(responseJson);
-                  console.log(response);
                 } else {
                   const { response, responseJson, error } =
                     await NotesApi.addNote(note_data);
@@ -394,7 +382,6 @@ class pn_noteitems extends HTMLElement {
                     );
                   }
                 } else {
-                  console.log('sukses edit/tambah');
                   confBox.success(confBox.instance);
                   hideModal();
                   that.adtFunct().fetchAndDisplayNotes();
@@ -508,7 +495,6 @@ class pn_noteitems extends HTMLElement {
                 } else if (action == 'edit') {
                   addNewNoteHandlerExec(true, idNote).showModal();
                 } else {
-                  console.log(action);
                   return;
                 }
               });
@@ -575,7 +561,6 @@ class pn_noteitems extends HTMLElement {
                 respon['responseJson'] = responseJson;
                 respon['error'] = error;
               } else {
-                console.log('bukan hapus bukan arsip');
               }
               if (
                 respon.error ||
@@ -646,8 +631,6 @@ class pn_noteitems extends HTMLElement {
       }
 
       function filteringDataBasedOnActiveTab(notes_data) {
-        console.log(Object.keys(that.GeneralNoteData));
-        console.log(notes_data);
         if (tabContent && Object.keys(that.GeneralNoteData).length > 0) {
           if (tabContent === 'Catatan Utama') {
             return notes_data.filter((note) => note.archived == false);
@@ -681,7 +664,6 @@ class pn_noteitems extends HTMLElement {
 
           // newNote.style.display = "none";
         } else {
-          console.log('tabCOntentKosong');
         }
       }
 
@@ -702,8 +684,6 @@ class pn_noteitems extends HTMLElement {
         const id = noteitemElement.getAttribute('data-idnote');
         let offsetWidth = noteitemElement.offsetWidth;
         let maxLength = Math.round(0.5146 * offsetWidth - 81.02);
-        console.log(noteitemElement);
-        console.log(`offsetWidth: ${offsetWidth} Maxlenght = ${maxLength} `);
         let spanElement = noteitemElement.querySelector('span[slot="body"]');
 
         const note = that.GeneralNoteData.find((note) => note.id === id);
@@ -711,6 +691,7 @@ class pn_noteitems extends HTMLElement {
         if (note) {
           if (spanElement) {
             spanElement.textContent = Utils.truncateText(note.body, maxLength);
+            // spanElement.style.cssText = `overflow: hidden;display: block;width: ${offsetWidth - 40}px;`;
           }
         }
       });

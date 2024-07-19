@@ -8,7 +8,6 @@ class NotesApi {
       const responseJson = await response.json();
       return { response, responseJson };
     } catch (error) {
-      console.log(error);
       return { error };
     }
   }
@@ -65,7 +64,6 @@ class NotesApi {
       });
 
       const responseJson = await response.json();
-      console.log(`Response: ${response}, ResponseJSON : ${responseJson}`);
 
       return { response, responseJson };
     } catch (error) {
@@ -79,7 +77,6 @@ class NotesApi {
         method: 'POST',
       });
       const responseJson = await response.json();
-      console.log(`Response: ${response}, ResponseJSON : ${responseJson}`);
       return { response, responseJson };
     } catch (error) {
       return { error };
@@ -92,7 +89,6 @@ class NotesApi {
         method: 'POST',
       });
       const responseJson = await response.json();
-      console.log(`Response: ${response}, ResponseJSON : ${responseJson}`);
       return { response, responseJson };
     } catch (error) {
       return { error };
@@ -104,13 +100,8 @@ class NotesApi {
       const { response: responseAdd, responseJson: responseJsonAdd } =
         await NotesApi.addNote(newNoteData);
       const { response, responseJson } = await NotesApi.deleteNoteById(id);
-
-      console.log(responseAdd, responseJsonAdd);
-      console.log(response, responseJson);
       return { responseAdd, responseJsonAdd, response, responseJson };
     } catch (error) {
-      console.error(error);
-      alert('Gagal Mengedit Catatan');
       return { error };
     }
   }
